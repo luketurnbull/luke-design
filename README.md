@@ -31,7 +31,8 @@ Priorities:
 - [x] Create table to store models
 - [x] Create sidebar to display users t-shirt models
 - [x] Add button to create a new t-shirt model
-- [ ] Add react-three-fiber to the project
+- [x] Add react-three-fiber to the project
+- [x] Create basic scene with spinning cube
 - [ ] Add t-shirt model to the screen
   - [ ] Add Draco compression to the texture
   - [ ] Use GLTF to r3f to easily modulise the model (https://gltf.pmnd.rs/)
