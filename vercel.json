@@ -1,0 +1,5 @@
+{
+  "buildCommand": "vinxi build",
+  "framework": null,
+  "outputDirectory": ".output/public"
+}
