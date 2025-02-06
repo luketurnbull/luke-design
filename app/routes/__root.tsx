@@ -10,6 +10,7 @@ import {
   SignedIn,
   SignedOut,
   UserButton,
+  UserProfile,
   useAuth,
 } from '@clerk/tanstack-start'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
@@ -120,35 +121,39 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Meta />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: 'font-bold',
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{' '}
-          <Link
-            to="/posts"
-            activeProps={{
-              className: 'font-bold',
-            }}
-          >
-            Posts
-          </Link>
-          <div className="ml-auto">
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            <SignedOut>
-              <SignInButton mode="modal" />
-            </SignedOut>
+        <div className="grid grid-rows-[auto_1fr]">
+          <div className="p-4 text-lg sticky top-0 bg-white w-full shadow-md">
+            <nav className="flex gap-6 container mx-auto">
+              <Link
+                to="/"
+                activeProps={{
+                  className: 'font-bold',
+                }}
+                activeOptions={{ exact: true }}
+              >
+                Luke Design
+              </Link>{' '}
+              <Link
+                to="/posts"
+                activeProps={{
+                  className: 'font-bold',
+                }}
+              >
+                Posts
+              </Link>
+              <div className="ml-auto">
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton mode="modal" />
+                </SignedOut>
+              </div>
+            </nav>
           </div>
+          <main className="container mx-auto">{children}</main>
         </div>
-        <hr />
-        {children}
+
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>

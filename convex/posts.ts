@@ -1,4 +1,4 @@
-import { action, internalMutation, query } from './_generated/server'
+import { action, internalMutation, mutation, query } from './_generated/server'
 import { api, internal } from './_generated/api.js'
 import { v } from 'convex/values'
 import { WithoutSystemFields } from 'convex/server'
@@ -61,4 +61,19 @@ export const populate = action(async (ctx) => {
       }),
     ),
   )
+})
+
+export const create = mutation({
+  args: {
+    title: v.string(),
+    body: v.string(),
+  },
+  handler: async (ctx, { title, body }) => {
+    const post = {
+      id: Math.random().toString(36).substring(7),
+      title,
+      body,
+    }
+    return await ctx.db.insert('posts', post)
+  },
 })
