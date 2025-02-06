@@ -6,7 +6,7 @@ import { Id } from 'convex/_generated/dataModel'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useRef, Loader2 } from 'react'
 import { Mesh } from 'three'
-import { OrbitControls } from '@react-three/drei'
+import { Html, OrbitControls } from '@react-three/drei'
 /**
  * This route is used to display a specific t-shirt model.
  * It is wrapped in the _authed route so only authenticated users can access it.
@@ -38,12 +38,12 @@ function RouteComponent() {
   return (
     <Canvas>
       <OrbitControls />
-      <Scene />
+      <Scene model={model} />
     </Canvas>
   )
 }
 
-function Scene() {
+function Scene({ model }: { model: any }) {
   const meshRef = useRef<Mesh>(null)
 
   useFrame(() => {
@@ -57,10 +57,15 @@ function Scene() {
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
 
-      <mesh ref={meshRef}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="red" />
-      </mesh>
+      <group>
+        <mesh ref={meshRef}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="red" />
+        </mesh>
+        <Html>
+          <div>{model.name}</div>
+        </Html>
+      </group>
     </>
   )
 }
