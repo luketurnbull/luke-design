@@ -1,5 +1,5 @@
 {
-  "buildCommand": "vinxi build",
+  "buildCommand": "npm install && npm run build",
   "framework": null,
   "outputDirectory": ".output/public"
 }
