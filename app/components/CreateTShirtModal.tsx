@@ -13,6 +13,7 @@ import { Button } from '~/components/ui/button'
 import { useMutation } from 'convex/react'
 import { api } from 'convex/_generated/api'
 import { useState, useCallback } from 'react'
+import { useRouter } from '@tanstack/react-router'
 
 export default function CreateTShirtModal({
   children,
@@ -22,12 +23,21 @@ export default function CreateTShirtModal({
   const createModel = useMutation(api.models.create)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [shirtName, setShirtName] = useState('')
-
+  const router = useRouter()
   const handleCreateModel = useCallback(
-    (name: string) => {
-      createModel({ name })
+    async (name: string) => {
+      const newModel = await createModel({ name })
       setIsDialogOpen(false)
       setShirtName('')
+
+      if (newModel) {
+        router.navigate({
+          to: '/models/$modelId',
+          params: {
+            modelId: newModel,
+          },
+        })
+      }
     },
     [createModel],
   )

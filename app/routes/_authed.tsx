@@ -5,7 +5,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
-  BreadcrumbSeparator,
 } from '~/components/ui/breadcrumb'
 import MainSidebar from '~/components/MainSidebar'
 
@@ -41,7 +40,7 @@ function RouteComponent() {
       <div className="flex h-screen w-full">
         <MainSidebar />
         <div className="flex-1 grid grid-rows-[auto_1fr] min-h-0 overflow-hidden w-full">
-          <div className="bg-white shadow-md w-full">
+          <div className="bg-sidebar shadow-md w-full">
             <nav className="flex gap-6 items-center h-16 px-4 w-full">
               <SidebarTrigger />
               <Breadcrumb>
@@ -55,17 +54,6 @@ function RouteComponent() {
                       activeOptions={{ exact: true }}
                     >
                       Dashboard
-                    </Link>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <Link
-                      to="/models/$modelId"
-                      params={{
-                        modelId: '123',
-                      }}
-                    >
-                      Model 1
                     </Link>
                   </BreadcrumbItem>
                 </BreadcrumbList>
