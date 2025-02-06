@@ -28,21 +28,19 @@ Priorities:
 - [x] Deploy to Vercel
 - [x] Add shadcn/ui
 - [x] Get posts working in Convex to get some understanding of how it works
-- [ ] Create table to store models
-- [ ] Create sidebar to display users t-shirt models
-- [ ] Add button to create a new t-shirt model
-- [ ] Add some textures to the table
-- [ ] Display textures in a panel
+- [x] Create table to store models
+- [x] Create sidebar to display users t-shirt models
+- [x] Add button to create a new t-shirt model
 - [ ] Add react-three-fiber to the project
-- [ ] Add Tweakpane for testing
 - [ ] Add t-shirt model to the screen
   - [ ] Add Draco compression to the texture
   - [ ] Use GLTF to r3f to easily modulise the model (https://gltf.pmnd.rs/)
+- [ ] Add Tweakpane for testing
 - [ ] Refine scene to look realistic and add lighting (Use custom shader for lighting?)
 - [ ] HDR Environment map?
 - [ ] Directional and spot light, add to Tweakpane to test
 - [ ] Tone mapping? Add to Tweakpane to test
-- [ ]
+- [ ] Display textures in a panel
 - [ ] Allow user to add different textures to the model
 - [ ] Allow user to change colour of the model
 - [ ] Make user settings, let the tinker with the scene and lighting?
