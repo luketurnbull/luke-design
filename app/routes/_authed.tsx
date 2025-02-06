@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
-import { SignIn, UserButton } from '@clerk/tanstack-start'
+import { SignIn } from '@clerk/tanstack-start'
 import { SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar'
 import {
   Breadcrumb,
@@ -32,43 +32,44 @@ export const Route = createFileRoute('/_authed')({
 function RouteComponent() {
   return (
     <SidebarProvider>
-      <MainSidebar />
-      <div className="grid grid-rows-[auto_1fr]">
-        <div className="p-4 text-lg fixed top-0 bg-white w-screen shadow-md">
-          <nav className="flex gap-6 items-center mx-auto">
-            <SidebarTrigger />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <Link
-                    to="/"
-                    activeProps={{
-                      className: 'font-bold',
-                    }}
-                    activeOptions={{ exact: true }}
-                  >
-                    Luke Design
-                  </Link>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <Link
-                    to="/models/$modelId"
-                    params={{
-                      modelId: '123',
-                    }}
-                  >
-                    Model 1
-                  </Link>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="ml-auto">
-              <UserButton />
-            </div>
-          </nav>
+      <div className="flex h-screen w-full">
+        <MainSidebar />
+        <div className="flex-1 grid grid-rows-[auto_1fr] min-h-0 overflow-hidden w-full">
+          <div className="bg-white shadow-md w-full">
+            <nav className="flex gap-6 items-center h-16 px-4 w-full">
+              <SidebarTrigger />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <Link
+                      to="/dashboard"
+                      activeProps={{
+                        className: 'font-bold',
+                      }}
+                      activeOptions={{ exact: true }}
+                    >
+                      Dashboard
+                    </Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <Link
+                      to="/models/$modelId"
+                      params={{
+                        modelId: '123',
+                      }}
+                    >
+                      Model 1
+                    </Link>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </nav>
+          </div>
+          <main className="min-h-0 overflow-auto w-full">
+            <Outlet />
+          </main>
         </div>
-        <Outlet />
       </div>
     </SidebarProvider>
   )

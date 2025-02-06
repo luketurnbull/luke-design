@@ -45,3 +45,4 @@ Priorities:
 - [ ] Allow user to change colour of the model
 - [ ] Make user settings, let the tinker with the scene and lighting?
 - [ ] Smooth transitions, could blender between textures?
+- [ ] Add delete button functionality to delete a model

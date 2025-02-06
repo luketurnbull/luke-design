@@ -11,24 +11,12 @@ import {
   SidebarGroupContent,
 } from '~/components/ui/sidebar'
 import { Shirt, Plus } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-  DialogHeader,
-} from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { useCallback, useState } from 'react'
 import { api } from 'convex/_generated/api'
-import { useMutation, useQuery } from 'convex/react'
+import { useQuery } from 'convex/react'
 import { useAuth } from '@clerk/clerk-react'
 import { UserButton } from '@clerk/tanstack-start'
 import { Link } from '@tanstack/react-router'
+import CreateTShirtModal from './CreateTShirtModal'
 
 export default function MainSidebar() {
   const identity = useAuth()
@@ -36,18 +24,6 @@ export default function MainSidebar() {
     userId: identity?.userId as string,
   })
   const profile = useQuery(api.models.profile)
-  const createModel = useMutation(api.models.create)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [shirtName, setShirtName] = useState('')
-
-  const handleCreateModel = useCallback(
-    (name: string) => {
-      createModel({ name })
-      setIsDialogOpen(false)
-      setShirtName('')
-    },
-    [createModel],
-  )
 
   return (
     <Sidebar collapsible="icon">
@@ -62,32 +38,11 @@ export default function MainSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Your T-shirts</SidebarGroupLabel>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <SidebarGroupAction title="New Shirt">
-                <Plus /> <span className="sr-only">New Shirt</span>
-              </SidebarGroupAction>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>New Shirt</DialogTitle>
-                <DialogDescription>Create a new shirt model.</DialogDescription>
-              </DialogHeader>
-              <Input
-                placeholder="Shirt Name"
-                value={shirtName}
-                onChange={(e) => setShirtName(e.target.value)}
-              />
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button onClick={() => handleCreateModel(shirtName)}>
-                  Create
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <CreateTShirtModal>
+            <SidebarGroupAction title="New Shirt">
+              <Plus /> <span className="sr-only">New Shirt</span>
+            </SidebarGroupAction>
+          </CreateTShirtModal>
           <SidebarGroupContent>
             <SidebarMenu>
               {models?.map((model) => (
