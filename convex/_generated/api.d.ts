@@ -13,7 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as posts from "../posts.js";
+import type * as models from "../models.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -24,7 +24,7 @@ import type * as posts from "../posts.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  posts: typeof posts;
+  models: typeof models;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -1,10 +1,9 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
 
 export default defineSchema({
-  posts: defineTable({
-    id: v.string(),
-    title: v.string(),
-    body: v.string(),
-  }).index("id", ["id"]),
-});
+  models: defineTable({
+    userId: v.string(),
+    name: v.string(),
+  }).index('userId', ['userId']),
+})

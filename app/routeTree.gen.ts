@@ -11,21 +11,12 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ConvexpostsImport } from './routes/convexposts'
 import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthedPostsImport } from './routes/_authed/posts'
-import { Route as AuthedPostsIndexImport } from './routes/_authed/posts.index'
-import { Route as AuthedProfileSplatImport } from './routes/_authed/profile.$'
-import { Route as AuthedPostsPostIdImport } from './routes/_authed/posts.$postId'
+import { Route as AuthedDashboardImport } from './routes/_authed/dashboard'
+import { Route as AuthedModelsModelIdImport } from './routes/_authed/models.$modelId'
 
 // Create/Update Routes
-
-const ConvexpostsRoute = ConvexpostsImport.update({
-  id: '/convexposts',
-  path: '/convexposts',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const AuthedRoute = AuthedImport.update({
   id: '/_authed',
@@ -38,28 +29,16 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthedPostsRoute = AuthedPostsImport.update({
-  id: '/posts',
-  path: '/posts',
+const AuthedDashboardRoute = AuthedDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
 
-const AuthedPostsIndexRoute = AuthedPostsIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthedPostsRoute,
-} as any)
-
-const AuthedProfileSplatRoute = AuthedProfileSplatImport.update({
-  id: '/profile/$',
-  path: '/profile/$',
+const AuthedModelsModelIdRoute = AuthedModelsModelIdImport.update({
+  id: '/models/$modelId',
+  path: '/models/$modelId',
   getParentRoute: () => AuthedRoute,
-} as any)
-
-const AuthedPostsPostIdRoute = AuthedPostsPostIdImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => AuthedPostsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -80,68 +59,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedImport
       parentRoute: typeof rootRoute
     }
-    '/convexposts': {
-      id: '/convexposts'
-      path: '/convexposts'
-      fullPath: '/convexposts'
-      preLoaderRoute: typeof ConvexpostsImport
-      parentRoute: typeof rootRoute
-    }
-    '/_authed/posts': {
-      id: '/_authed/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof AuthedPostsImport
+    '/_authed/dashboard': {
+      id: '/_authed/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthedDashboardImport
       parentRoute: typeof AuthedImport
     }
-    '/_authed/posts/$postId': {
-      id: '/_authed/posts/$postId'
-      path: '/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof AuthedPostsPostIdImport
-      parentRoute: typeof AuthedPostsImport
-    }
-    '/_authed/profile/$': {
-      id: '/_authed/profile/$'
-      path: '/profile/$'
-      fullPath: '/profile/$'
-      preLoaderRoute: typeof AuthedProfileSplatImport
+    '/_authed/models/$modelId': {
+      id: '/_authed/models/$modelId'
+      path: '/models/$modelId'
+      fullPath: '/models/$modelId'
+      preLoaderRoute: typeof AuthedModelsModelIdImport
       parentRoute: typeof AuthedImport
-    }
-    '/_authed/posts/': {
-      id: '/_authed/posts/'
-      path: '/'
-      fullPath: '/posts/'
-      preLoaderRoute: typeof AuthedPostsIndexImport
-      parentRoute: typeof AuthedPostsImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthedPostsRouteChildren {
-  AuthedPostsPostIdRoute: typeof AuthedPostsPostIdRoute
-  AuthedPostsIndexRoute: typeof AuthedPostsIndexRoute
-}
-
-const AuthedPostsRouteChildren: AuthedPostsRouteChildren = {
-  AuthedPostsPostIdRoute: AuthedPostsPostIdRoute,
-  AuthedPostsIndexRoute: AuthedPostsIndexRoute,
-}
-
-const AuthedPostsRouteWithChildren = AuthedPostsRoute._addFileChildren(
-  AuthedPostsRouteChildren,
-)
-
 interface AuthedRouteChildren {
-  AuthedPostsRoute: typeof AuthedPostsRouteWithChildren
-  AuthedProfileSplatRoute: typeof AuthedProfileSplatRoute
+  AuthedDashboardRoute: typeof AuthedDashboardRoute
+  AuthedModelsModelIdRoute: typeof AuthedModelsModelIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedPostsRoute: AuthedPostsRouteWithChildren,
-  AuthedProfileSplatRoute: AuthedProfileSplatRoute,
+  AuthedDashboardRoute: AuthedDashboardRoute,
+  AuthedModelsModelIdRoute: AuthedModelsModelIdRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -150,67 +94,47 @@ const AuthedRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
-  '/convexposts': typeof ConvexpostsRoute
-  '/posts': typeof AuthedPostsRouteWithChildren
-  '/posts/$postId': typeof AuthedPostsPostIdRoute
-  '/profile/$': typeof AuthedProfileSplatRoute
-  '/posts/': typeof AuthedPostsIndexRoute
+  '/dashboard': typeof AuthedDashboardRoute
+  '/models/$modelId': typeof AuthedModelsModelIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
-  '/convexposts': typeof ConvexpostsRoute
-  '/posts/$postId': typeof AuthedPostsPostIdRoute
-  '/profile/$': typeof AuthedProfileSplatRoute
-  '/posts': typeof AuthedPostsIndexRoute
+  '/dashboard': typeof AuthedDashboardRoute
+  '/models/$modelId': typeof AuthedModelsModelIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
-  '/convexposts': typeof ConvexpostsRoute
-  '/_authed/posts': typeof AuthedPostsRouteWithChildren
-  '/_authed/posts/$postId': typeof AuthedPostsPostIdRoute
-  '/_authed/profile/$': typeof AuthedProfileSplatRoute
-  '/_authed/posts/': typeof AuthedPostsIndexRoute
+  '/_authed/dashboard': typeof AuthedDashboardRoute
+  '/_authed/models/$modelId': typeof AuthedModelsModelIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | ''
-    | '/convexposts'
-    | '/posts'
-    | '/posts/$postId'
-    | '/profile/$'
-    | '/posts/'
+  fullPaths: '/' | '' | '/dashboard' | '/models/$modelId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/convexposts' | '/posts/$postId' | '/profile/$' | '/posts'
+  to: '/' | '' | '/dashboard' | '/models/$modelId'
   id:
     | '__root__'
     | '/'
     | '/_authed'
-    | '/convexposts'
-    | '/_authed/posts'
-    | '/_authed/posts/$postId'
-    | '/_authed/profile/$'
-    | '/_authed/posts/'
+    | '/_authed/dashboard'
+    | '/_authed/models/$modelId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
-  ConvexpostsRoute: typeof ConvexpostsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
-  ConvexpostsRoute: ConvexpostsRoute,
 }
 
 export const routeTree = rootRoute
@@ -224,8 +148,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_authed",
-        "/convexposts"
+        "/_authed"
       ]
     },
     "/": {
@@ -234,32 +157,17 @@ export const routeTree = rootRoute
     "/_authed": {
       "filePath": "_authed.tsx",
       "children": [
-        "/_authed/posts",
-        "/_authed/profile/$"
+        "/_authed/dashboard",
+        "/_authed/models/$modelId"
       ]
     },
-    "/convexposts": {
-      "filePath": "convexposts.tsx"
-    },
-    "/_authed/posts": {
-      "filePath": "_authed/posts.tsx",
-      "parent": "/_authed",
-      "children": [
-        "/_authed/posts/$postId",
-        "/_authed/posts/"
-      ]
-    },
-    "/_authed/posts/$postId": {
-      "filePath": "_authed/posts.$postId.tsx",
-      "parent": "/_authed/posts"
-    },
-    "/_authed/profile/$": {
-      "filePath": "_authed/profile.$.tsx",
+    "/_authed/dashboard": {
+      "filePath": "_authed/dashboard.tsx",
       "parent": "/_authed"
     },
-    "/_authed/posts/": {
-      "filePath": "_authed/posts.index.tsx",
-      "parent": "/_authed/posts"
+    "/_authed/models/$modelId": {
+      "filePath": "_authed/models.$modelId.tsx",
+      "parent": "/_authed"
     }
   }
 }

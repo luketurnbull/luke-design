@@ -4,15 +4,7 @@ import {
   createRootRouteWithContext,
   useRouteContext,
 } from '@tanstack/react-router'
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-  UserProfile,
-  useAuth,
-} from '@clerk/tanstack-start'
+import { ClerkProvider, useAuth } from '@clerk/tanstack-start'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { Meta, Scripts, createServerFn } from '@tanstack/start'
 import { QueryClient } from '@tanstack/react-query'
@@ -121,41 +113,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Meta />
       </head>
       <body>
-        <div className="grid grid-rows-[auto_1fr]">
-          <div className="p-4 text-lg sticky top-0 bg-white w-full shadow-md">
-            <nav className="flex gap-6 container mx-auto">
-              <Link
-                to="/"
-                activeProps={{
-                  className: 'font-bold',
-                }}
-                activeOptions={{ exact: true }}
-              >
-                Luke Design
-              </Link>{' '}
-              <Link
-                to="/posts"
-                activeProps={{
-                  className: 'font-bold',
-                }}
-              >
-                Posts
-              </Link>
-              <div className="ml-auto">
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-                <SignedOut>
-                  <SignInButton mode="modal" />
-                </SignedOut>
-              </div>
-            </nav>
-          </div>
-          <main className="container mx-auto">{children}</main>
-        </div>
-
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
+        {children}
       </body>
     </html>
   )
