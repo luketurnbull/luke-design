@@ -3,12 +3,11 @@ import { api } from 'convex/_generated/api'
 import { useQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { Id } from 'convex/_generated/dataModel'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
-import { OrbitControls } from '@react-three/drei'
+import { Canvas } from '@react-three/fiber'
+import { Environment, OrbitControls, useTexture } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
-import * as THREE from 'three'
 import TShirtModel from '~/components/TShirtModel'
+import * as THREE from 'three'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -28,18 +27,31 @@ function RouteComponent() {
     }),
   )
 
-  console.log(model)
-
   if (!model) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center h-full">
         <Loader2 className="animate-spin w-10 h-10" />
       </div>
     )
   }
 
   return (
-    <Canvas>
+    <Canvas
+      // Clamp the dpr to 1 or 2, anything more than 2 is too much
+      dpr={[1, 2]}
+      // Enable shadows for better lighting
+      shadows={true}
+      gl={{
+        // Enable preserveDrawingBuffer for better performance
+        preserveDrawingBuffer: true,
+        // Enable antialiasing for smoother edges
+        antialias: true,
+        // Apply Reinhard tone mapping for realistic lighting
+        toneMapping: THREE.ReinhardToneMapping,
+        // Enable tone mapping for realistic lighting
+        toneMappingExposure: 3,
+      }}
+    >
       <OrbitControls />
       <Scene />
     </Canvas>
@@ -49,8 +61,7 @@ function RouteComponent() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
+      <Environment path="/environment-maps/field/" files="2k.hdr" />
 
       <TShirtModel />
     </>

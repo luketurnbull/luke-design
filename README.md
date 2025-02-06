@@ -33,9 +33,9 @@ Priorities:
 - [x] Add button to create a new t-shirt model
 - [x] Add react-three-fiber to the project
 - [x] Create basic scene with spinning cube
-- [ ] Add t-shirt model to the screen
-  - [ ] Add Draco compression to the texture
-  - [ ] Use GLTF to r3f to easily modulise the model (https://gltf.pmnd.rs/)
+- [x] Add t-shirt model to the screen
+  - [x] Add Draco compression to the texture
+  - [x] Use GLTF to r3f to easily modulise the model (https://gltf.pmnd.rs/)
 - [ ] Add Tweakpane for testing
 - [ ] Refine scene to look realistic and add lighting (Use custom shader for lighting?)
 - [ ] HDR Environment map?
