@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
 import { SignIn } from '@clerk/tanstack-start'
 import { SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar'
 import {
@@ -9,10 +9,16 @@ import {
 } from '~/components/ui/breadcrumb'
 import MainSidebar from '~/components/MainSidebar'
 
+/**
+ * This route is used to wrap the entire application in a sidebar and breadcrumb.
+ * It also checks if the user is authenticated and redirects to the home page if not.
+ */
 export const Route = createFileRoute('/_authed')({
   beforeLoad: ({ context }) => {
     if (!context.userId) {
-      throw new Error('Not authenticated')
+      throw redirect({
+        to: '/',
+      })
     }
   },
   errorComponent: ({ error }) => {
