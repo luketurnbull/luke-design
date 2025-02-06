@@ -4,9 +4,12 @@ import { useQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { Id } from 'convex/_generated/dataModel'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useRef, Loader2 } from 'react'
-import { Mesh } from 'three'
-import { Html, OrbitControls } from '@react-three/drei'
+import { useRef } from 'react'
+import { OrbitControls } from '@react-three/drei'
+import { Loader2 } from 'lucide-react'
+import * as THREE from 'three'
+import TShirtModel from '~/components/TShirtModel'
+
 /**
  * This route is used to display a specific t-shirt model.
  * It is wrapped in the _authed route so only authenticated users can access it.
@@ -38,34 +41,18 @@ function RouteComponent() {
   return (
     <Canvas>
       <OrbitControls />
-      <Scene model={model} />
+      <Scene />
     </Canvas>
   )
 }
 
-function Scene({ model }: { model: any }) {
-  const meshRef = useRef<Mesh>(null)
-
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += 0.01
-    }
-  })
-
+function Scene() {
   return (
     <>
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
 
-      <group>
-        <mesh ref={meshRef}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="red" />
-        </mesh>
-        <Html>
-          <div>{model.name}</div>
-        </Html>
-      </group>
+      <TShirtModel />
     </>
   )
 }
