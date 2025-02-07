@@ -66,6 +66,7 @@ export default function MainSidebar() {
                         className: 'text-gray-500 font-light',
                       }}
                     >
+                      {/* Added shirts icons with numbers inside to allow the user to quickly change between their designs */}
                       <div className="relative -ml-[6px]">
                         <Shirt className="w-7 h-7" />
                         <span className="absolute inset-0 mt-[1px] flex items-center justify-center text-xs font-medium">
