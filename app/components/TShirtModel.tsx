@@ -59,7 +59,12 @@ export default function TShirtModel(
     if (!cameraControls || !ref.current) return
 
     const box = new THREE.Box3().setFromObject(ref.current)
-    cameraControls.fitToBox(box, true, {})
+    cameraControls.fitToBox(box, true, {
+      paddingBottom: 0.1,
+      paddingTop: 0.1,
+      paddingLeft: 0.1,
+      paddingRight: 0.1,
+    })
     cameraControls.rotatePolarTo(Math.PI / 2, true)
     if (azimuth) {
       cameraControls.rotateAzimuthTo(azimuth, true)
