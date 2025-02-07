@@ -124,12 +124,15 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         userData={{ name: 'right_sleeve' }}
       >
         <meshPhysicalMaterial
-          color="purple"
+          //  color="purple"
           map={textures['red-plaid'].albedo}
           normalMap={textures['red-plaid'].normal}
           roughnessMap={textures['red-plaid'].roughness}
           aoMap={textures['red-plaid'].ao}
           metalnessMap={textures['red-plaid'].metallic}
+          sheen={0.1}
+          sheenColor={new THREE.Color(1, 0, 0)}
+          sheenRoughness={2}
         />
       </mesh>
     </group>
