@@ -35,10 +35,12 @@ function RouteComponent() {
   const updateMaterial = useConvexMutation(api.models.updateMaterial)
 
   const handleMaterialChange = useCallback(
-    async (material: MaterialType) => {
+    async (material: MaterialType | undefined) => {
+      // Convert undefined to null for database storage
+      const dbMaterial = material === undefined ? null : material
       await updateMaterial({
         modelId,
-        material,
+        material: dbMaterial,
       })
     },
     [modelId, updateMaterial],
@@ -97,11 +99,15 @@ function RouteComponent() {
     )
   }
 
+  // Convert null to undefined for the UI components
+  const currentMaterial =
+    model.material === null ? undefined : (model.material as MaterialType)
+
   // Once we have the model data, display it
   return (
     <div className="h-full w-full relative">
       <TextureSelector
-        selectedMaterial={model.material as MaterialType | undefined}
+        selectedMaterial={currentMaterial}
         onSelectMaterial={handleMaterialChange}
       />
 
@@ -122,9 +128,7 @@ function RouteComponent() {
         This is a great way to start off a scene and add more complexity later
       */}
         <Suspense fallback={null}>
-          <Scene
-            selectedMaterial={model.material as MaterialType | undefined}
-          />
+          <Scene selectedMaterial={currentMaterial} />
           <Preload all />
         </Suspense>
 

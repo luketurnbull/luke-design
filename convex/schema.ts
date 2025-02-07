@@ -5,6 +5,6 @@ export default defineSchema({
   models: defineTable({
     userId: v.string(),
     name: v.string(),
-    material: v.optional(v.string()),
+    material: v.optional(v.union(v.string(), v.null())),
   }).index('userId', ['userId']),
 })

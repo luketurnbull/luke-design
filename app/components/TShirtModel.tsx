@@ -59,21 +59,17 @@ export default function TShirtModel(
     if (!cameraControls || !ref.current) return
 
     const box = new THREE.Box3().setFromObject(ref.current)
-    cameraControls.fitToBox(box, true, {
-      paddingBottom: 0.1,
-      paddingTop: 0.1,
-      paddingLeft: 0.1,
-      paddingRight: 0.1,
-    })
+    cameraControls.fitToBox(box, true, {})
     cameraControls.rotatePolarTo(Math.PI / 2, true)
     if (azimuth) {
       cameraControls.rotateAzimuthTo(azimuth, true)
     }
   }
 
-  // Get the selected textures if a material is selected, otherwise use a default material
+  // Create the material based on whether a texture is selected
   const material = selectedMaterial ? (
     <meshPhysicalMaterial
+      key={selectedMaterial} // Force re-creation of material when texture changes
       map={textures[selectedMaterial].albedo}
       normalMap={textures[selectedMaterial].normal}
       roughnessMap={textures[selectedMaterial].roughness}
@@ -83,6 +79,7 @@ export default function TShirtModel(
     />
   ) : (
     <meshPhysicalMaterial
+      key="default" // Force re-creation of material when switching to default
       color="#ffffff"
       roughness={0.5}
       metalness={0}

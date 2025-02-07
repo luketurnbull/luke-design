@@ -35,6 +35,7 @@ export const create = mutation({
     const model = {
       name,
       userId: identity.subject,
+      material: null,
     }
     return await ctx.db.insert('models', model)
   },
@@ -43,7 +44,7 @@ export const create = mutation({
 export const updateMaterial = mutation({
   args: {
     modelId: v.id('models'),
-    material: v.string(),
+    material: v.union(v.string(), v.null()),
   },
   handler: async (ctx, { modelId, material }) => {
     const identity = await ctx.auth.getUserIdentity()

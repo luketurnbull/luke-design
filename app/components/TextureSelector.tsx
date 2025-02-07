@@ -24,10 +24,25 @@ export default function TextureSelector({
   onSelectMaterial,
 }: {
   selectedMaterial: MaterialType | undefined
-  onSelectMaterial: (material: MaterialType) => void
+  onSelectMaterial: (material: MaterialType | undefined) => void
 }) {
   return (
     <div className="absolute flex flex-col gap-2 top-3 left-3 z-10">
+      <button
+        className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-white ${
+          selectedMaterial === undefined
+            ? 'border-white ring-2 ring-white/60'
+            : 'border-white/20 hover:border-white/40'
+        }`}
+        aria-label="Remove texture"
+        aria-pressed={selectedMaterial === undefined}
+        onClick={() => onSelectMaterial(undefined)}
+      >
+        <div className="w-full h-full flex items-center justify-center text-black/50 text-sm font-medium">
+          None
+        </div>
+      </button>
+
       {MATERIALS.map((material) => (
         <button
           key={material.id}
