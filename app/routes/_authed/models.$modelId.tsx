@@ -11,7 +11,6 @@ import { Suspense } from 'react'
 import { useControls } from 'leva'
 import Scene from '~/components/Scene'
 import PostProcessing from '~/components/PostProcessing'
-import { useTextures } from '~/hooks/use-textures'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -131,13 +130,44 @@ function RouteComponent() {
   )
 }
 
+// Material options with their display names and paths
+const MATERIALS = [
+  {
+    id: 'denim',
+    name: 'Denim',
+    preview: '/material/denim/albedo.png',
+  },
+  {
+    id: 'red-plaid',
+    name: 'Red Plaid',
+    preview: '/material/red-plaid/albedo.png',
+  },
+  {
+    id: 'houndstooth-fabric-weave',
+    name: 'Houndstooth',
+    preview: '/material/houndstooth-fabric-weave/albedo.png',
+  },
+] as const
+
 function Textures() {
   return (
     <div className="absolute flex flex-col gap-2 top-3 left-3 z-10">
-      <div className="w-12 h-12 bg-gray-400 rounded-md" />
-      <div className="w-12 h-12 bg-gray-400 rounded-md" />
-      <div className="w-12 h-12 bg-gray-400 rounded-md" />
-      <div className="w-12 h-12 bg-gray-400 rounded-md" />
+      {MATERIALS.map((material) => (
+        <button
+          key={material.id}
+          className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white/20 hover:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/60 focus-visible:ring-2 focus-visible:ring-white/60 transition-colors"
+          style={{
+            backgroundImage: `url(${material.preview})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          aria-label={`Select ${material.name} texture`}
+          onClick={() => {
+            // TODO: Implement texture selection
+            console.log(`Selected ${material.id} texture`)
+          }}
+        />
+      ))}
     </div>
   )
 }
