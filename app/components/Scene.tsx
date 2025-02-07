@@ -7,7 +7,7 @@ import PointLight from './PointLight'
 import { MaterialType } from '~/hooks/use-textures'
 
 type SceneProps = {
-  selectedMaterial: MaterialType
+  selectedMaterial: MaterialType | undefined
 }
 
 // Set up the Scene with light and camera controls

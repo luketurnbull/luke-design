@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { api } from 'convex/_generated/api'
-import { useQuery } from '@tanstack/react-query'
-import { convexQuery } from '@convex-dev/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import { useConvexQuery, useConvexMutation } from '@convex-dev/react-query'
 import { Id } from 'convex/_generated/dataModel'
 import { Canvas } from '@react-three/fiber'
 import { BakeShadows, Preload } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import * as THREE from 'three'
-import { Suspense, useState } from 'react'
+import { Suspense, useCallback } from 'react'
 import { useControls } from 'leva'
 import Scene from '~/components/Scene'
 import PostProcessing from '~/components/PostProcessing'
@@ -30,14 +30,19 @@ export const Route = createFileRoute('/_authed/models/$modelId')({
  */
 function RouteComponent() {
   const params = Route.useParams()
-  const { data: model } = useQuery(
-    convexQuery(api.models.getById, {
-      modelId: params.modelId as Id<'models'>,
-    }),
-  )
+  const modelId = params.modelId as Id<'models'>
+  const model = useConvexQuery(api.models.getById, { modelId })
+  const updateMaterial = useConvexMutation(api.models.updateMaterial)
 
-  const [selectedMaterial, setSelectedMaterial] =
-    useState<MaterialType>('denim')
+  const handleMaterialChange = useCallback(
+    async (material: MaterialType) => {
+      await updateMaterial({
+        modelId,
+        material,
+      })
+    },
+    [modelId, updateMaterial],
+  )
 
   // Add Leva controls for renderer settings
   const rendererSettings = useControls(
@@ -96,8 +101,8 @@ function RouteComponent() {
   return (
     <div className="h-full w-full relative">
       <Textures
-        selectedMaterial={selectedMaterial}
-        onSelectMaterial={setSelectedMaterial}
+        selectedMaterial={model.material as MaterialType | undefined}
+        onSelectMaterial={handleMaterialChange}
       />
       <Canvas
         dpr={[1, 2]}
@@ -116,7 +121,9 @@ function RouteComponent() {
         This is a great way to start off a scene and add more complexity later
       */}
         <Suspense fallback={null}>
-          <Scene selectedMaterial={selectedMaterial} />
+          <Scene
+            selectedMaterial={model.material as MaterialType | undefined}
+          />
           <Preload all />
         </Suspense>
 
@@ -157,7 +164,7 @@ const MATERIALS = [
 ] as const
 
 type TexturesProps = {
-  selectedMaterial: MaterialType
+  selectedMaterial: MaterialType | undefined
   onSelectMaterial: (material: MaterialType) => void
 }
 

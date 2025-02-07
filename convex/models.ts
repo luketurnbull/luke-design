@@ -39,3 +39,27 @@ export const create = mutation({
     return await ctx.db.insert('models', model)
   },
 })
+
+export const updateMaterial = mutation({
+  args: {
+    modelId: v.id('models'),
+    material: v.string(),
+  },
+  handler: async (ctx, { modelId, material }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('User not authenticated')
+    }
+
+    const model = await ctx.db.get(modelId)
+    if (!model) {
+      throw new Error('Model not found')
+    }
+
+    if (model.userId !== identity.subject) {
+      throw new Error('Not authorized')
+    }
+
+    return await ctx.db.patch(modelId, { material })
+  },
+})

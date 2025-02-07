@@ -30,7 +30,7 @@ type GLTFResult = GLTF & {
 export default function TShirtModel(
   props: JSX.IntrinsicElements['group'] & {
     cameraControls: CameraControls | null
-    selectedMaterial: MaterialType
+    selectedMaterial: MaterialType | undefined
   },
 ) {
   // Using Draco compression to reduce the file size of the model
@@ -66,7 +66,24 @@ export default function TShirtModel(
     }
   }
 
-  const selectedTextures = textures[selectedMaterial]
+  // Get the selected textures if a material is selected, otherwise use a default material
+  const material = selectedMaterial ? (
+    <meshPhysicalMaterial
+      map={textures[selectedMaterial].albedo}
+      normalMap={textures[selectedMaterial].normal}
+      roughnessMap={textures[selectedMaterial].roughness}
+      aoMap={textures[selectedMaterial].ao}
+      metalnessMap={textures[selectedMaterial].metallic}
+      sheen={1}
+    />
+  ) : (
+    <meshPhysicalMaterial
+      color="#ffffff"
+      roughness={0.5}
+      metalness={0}
+      sheen={1}
+    />
+  )
 
   // Decided to use meshPhysicalMaterial for the t-shirt
   // This is because it's the most realistic material for the t-shirt
@@ -82,14 +99,7 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
         azimuth={Math.PI}
       >
-        <meshPhysicalMaterial
-          map={selectedTextures.albedo}
-          normalMap={selectedTextures.normal}
-          roughnessMap={selectedTextures.roughness}
-          aoMap={selectedTextures.ao}
-          metalnessMap={selectedTextures.metallic}
-          sheen={1}
-        />
+        {material}
       </Mesh>
       <Mesh
         name="__var_neckline_neck_v__*front_panel"
@@ -98,14 +108,7 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
         azimuth={0}
       >
-        <meshPhysicalMaterial
-          map={selectedTextures.albedo}
-          normalMap={selectedTextures.normal}
-          roughnessMap={selectedTextures.roughness}
-          aoMap={selectedTextures.ao}
-          metalnessMap={selectedTextures.metallic}
-          sheen={1}
-        />
+        {material}
       </Mesh>
       <Mesh
         name="__var_neckline_neck_v__*neck_rim"
@@ -113,14 +116,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
       >
-        <meshPhysicalMaterial
-          map={selectedTextures.albedo}
-          normalMap={selectedTextures.normal}
-          roughnessMap={selectedTextures.roughness}
-          aoMap={selectedTextures.ao}
-          metalnessMap={selectedTextures.metallic}
-          sheen={1}
-        />
+        {material}
       </Mesh>
       <Mesh
         name="shirt_interior"
@@ -128,14 +124,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
       >
-        <meshPhysicalMaterial
-          map={selectedTextures.albedo}
-          normalMap={selectedTextures.normal}
-          roughnessMap={selectedTextures.roughness}
-          aoMap={selectedTextures.ao}
-          metalnessMap={selectedTextures.metallic}
-          sheen={1}
-        />
+        {material}
       </Mesh>
       <Mesh
         name="left_sleeve"
@@ -143,14 +132,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
       >
-        <meshPhysicalMaterial
-          map={selectedTextures.albedo}
-          normalMap={selectedTextures.normal}
-          roughnessMap={selectedTextures.roughness}
-          aoMap={selectedTextures.ao}
-          metalnessMap={selectedTextures.metallic}
-          sheen={1}
-        />
+        {material}
       </Mesh>
       <Mesh
         name="right_sleeve"
@@ -158,14 +140,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
       >
-        <meshPhysicalMaterial
-          map={selectedTextures.albedo}
-          normalMap={selectedTextures.normal}
-          roughnessMap={selectedTextures.roughness}
-          aoMap={selectedTextures.ao}
-          metalnessMap={selectedTextures.metallic}
-          sheen={1}
-        />
+        {material}
       </Mesh>
     </group>
   )
