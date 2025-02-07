@@ -11,7 +11,7 @@ export const DirectionalLight = () => {
     'Directional Light',
     {
       intensity: {
-        value: 0.4,
+        value: 5.0,
         min: 0,
         max: 5,
         step: 0.1,
@@ -19,8 +19,8 @@ export const DirectionalLight = () => {
       },
       position: {
         x: 0,
-        y: 6.5,
-        z: -10,
+        y: 7,
+        z: 1,
       },
       showHelper: {
         value: false,

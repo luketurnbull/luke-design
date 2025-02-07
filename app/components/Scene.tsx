@@ -33,7 +33,7 @@ export default function Scene({ selectedMaterial }: SceneProps) {
     'Environment',
     {
       enabled: {
-        value: true,
+        value: false,
         label: 'Enable Environment Map',
       },
     },
