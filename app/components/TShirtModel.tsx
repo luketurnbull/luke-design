@@ -2,7 +2,7 @@ import { GLTF } from 'three-stdlib'
 import * as THREE from 'three'
 import { useGLTF, CameraControls } from '@react-three/drei'
 import { useTextures } from '~/hooks/use-textures'
-import { useRef } from 'react'
+import { useRef, useMemo } from 'react'
 import { useLayoutEffect } from '@tanstack/react-router'
 import { MaterialType } from '~/hooks/use-textures'
 
@@ -71,32 +71,39 @@ export default function TShirtModel(
     }
   }
 
-  // Create the material based on whether a texture is selected
-  const material = selectedMaterial ? (
-    <meshPhysicalMaterial
-      key={selectedMaterial} // Force re-creation of material when texture changes
-      map={textures[selectedMaterial].albedo}
-      normalMap={textures[selectedMaterial].normal}
-      roughnessMap={textures[selectedMaterial].roughness}
-      aoMap={textures[selectedMaterial].ao}
-      metalnessMap={textures[selectedMaterial].metallic}
-      sheen={1}
-    />
-  ) : (
-    <meshPhysicalMaterial
-      key="default" // Force re-creation of material when switching to default
-      color="#ffffff"
-      roughness={0.5}
-      metalness={0}
-      sheen={1}
-    />
-  )
-
   // Decided to use meshPhysicalMaterial for the t-shirt
-  // This is because it's the most realistic material for the t-shirt
-  // It has a roughness map, normal map, and metallic map
-  // It also has a sheen map, which is used to simulate the shine of the t-shirt
-  // More to play around with to see what works best
+  // This is because it's the most realistic material for fabric
+  // It has a lot of settings to play around with
+  const material = useMemo(() => {
+    if (selectedMaterial) {
+      const selectedTextures = textures[selectedMaterial]
+      return new THREE.MeshPhysicalMaterial({
+        map: selectedTextures.albedo,
+        normalMap: selectedTextures.normal,
+        roughnessMap: selectedTextures.roughness,
+        aoMap: selectedTextures.ao,
+        metalnessMap: selectedTextures.metallic,
+        metalness: 0,
+        roughness: 1,
+        sheen: 1,
+      })
+    }
+
+    return new THREE.MeshPhysicalMaterial({
+      color: '#ffffff',
+      roughness: 0.5,
+      metalness: 0,
+      sheen: 1,
+    })
+  }, [selectedMaterial, textures])
+
+  // Cleanup material on unmount or when it changes
+  useLayoutEffect(() => {
+    return () => {
+      material.dispose()
+    }
+  }, [material])
+
   return (
     <group {...restProps} dispose={null} ref={groupRef}>
       <Mesh
@@ -105,50 +112,44 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
         azimuth={Math.PI}
-      >
-        {material}
-      </Mesh>
+        material={material}
+      />
       <Mesh
         name="__var_neckline_neck_v__*front_panel"
         geometry={nodes['__var_neckline_neck_v__*front_panel'].geometry}
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
         azimuth={0}
-      >
-        {material}
-      </Mesh>
+        material={material}
+      />
       <Mesh
         name="__var_neckline_neck_v__*neck_rim"
         geometry={nodes['__var_neckline_neck_v__*neck_rim'].geometry}
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
-      >
-        {material}
-      </Mesh>
+        material={material}
+      />
       <Mesh
         name="shirt_interior"
         geometry={nodes.shirt_interior.geometry}
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
-      >
-        {material}
-      </Mesh>
+        material={material}
+      />
       <Mesh
         name="left_sleeve"
         geometry={nodes.left_sleeve.geometry}
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
-      >
-        {material}
-      </Mesh>
+        material={material}
+      />
       <Mesh
         name="right_sleeve"
         geometry={nodes.right_sleeve.geometry}
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
-      >
-        {material}
-      </Mesh>
+        material={material}
+      />
     </group>
   )
 }
@@ -172,9 +173,7 @@ function Mesh(props: MeshProps) {
         e.stopPropagation()
         props.zoomToFit(ref, props.azimuth)
       }}
-    >
-      {props.children}
-    </mesh>
+    />
   )
 }
 
