@@ -11,6 +11,7 @@ import { Suspense } from 'react'
 import { useControls } from 'leva'
 import Scene from '~/components/Scene'
 import PostProcessing from '~/components/PostProcessing'
+import { useTextures } from '~/hooks/use-textures'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -91,7 +92,7 @@ function RouteComponent() {
   // Once we have the model data, display it
   return (
     <div className="h-full w-full relative">
-      <div className="absolute top-0 left-0 w-12 h-full bg-black/50 z-10"></div>
+      <Textures />
       <Canvas
         dpr={[1, 2]}
         shadows={rendererSettings.shadows}
@@ -126,6 +127,17 @@ function RouteComponent() {
         */}
         <BakeShadows />
       </Canvas>
+    </div>
+  )
+}
+
+function Textures() {
+  return (
+    <div className="absolute flex flex-col gap-2 top-3 left-3 z-10">
+      <div className="w-12 h-12 bg-gray-400 rounded-md" />
+      <div className="w-12 h-12 bg-gray-400 rounded-md" />
+      <div className="w-12 h-12 bg-gray-400 rounded-md" />
+      <div className="w-12 h-12 bg-gray-400 rounded-md" />
     </div>
   )
 }

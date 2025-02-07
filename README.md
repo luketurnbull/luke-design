@@ -36,14 +36,14 @@ Priorities:
 - [x] Add t-shirt model to the screen
   - [x] Add Draco compression to the texture
   - [x] Use GLTF to r3f to easily modulise the model (https://gltf.pmnd.rs/)
-- [ ] Add Tweakpane or Leva UI for testing
-- [ ] Refine scene to look realistic and add lighting (Use custom shader for lighting?)
+- [x] Add Tweakpane or Leva UI for testing
+- [x] Refine scene to look realistic and add lighting (Use custom shader for lighting?)
 - [x] HDR Environment map?
+- [x] Directional and spot light, add to Tweakpane or Leva UI to test
 - [ ] Display textures in a panel
 - [ ] Allow user to add different textures to the model
 - [ ] Allow user to change colour of the model
 - [ ] Add delete button functionality to delete a model
-- [ ] Directional and spot light, add to Tweakpane or Leva UI to test
 - [ ] Tone mapping? Add to Tweakpane or Leva UI to test
 - [ ] Documentation
 
