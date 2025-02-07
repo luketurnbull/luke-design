@@ -41,7 +41,6 @@ export default function TShirtModel(
 
   const textures = useTextures()
   const groupRef = useRef<THREE.Group>(null)
-  const backPanelRef = useRef<THREE.Mesh>(null)
 
   // Zoom to fit the model to the center of the screen when the component mounts
   useLayoutEffect(() => {
@@ -55,6 +54,7 @@ export default function TShirtModel(
     ref: React.RefObject<THREE.Group | THREE.Mesh>,
     azimuth?: number,
   ) => {
+    console.log('zoomToFit', ref, azimuth)
     if (!cameraControls || !ref.current) return
 
     const box = new THREE.Box3().setFromObject(ref.current)
@@ -72,18 +72,12 @@ export default function TShirtModel(
   // More to play around with to see what works best
   return (
     <group {...props} dispose={null} ref={groupRef}>
-      <mesh
+      <Mesh
         name="__var_neckline__neck_v__*back_pannel"
-        castShadow
-        receiveShadow
         geometry={nodes['__var_neckline__neck_v__*back_pannel'].geometry}
         position={[0, -1.152, 0.065]}
-        userData={{ name: '__var_neckline__neck_v__*back_pannel' }}
-        ref={backPanelRef}
-        onClick={() => {
-          console.log('Back panel clicked')
-          zoomToFit(backPanelRef, Math.PI)
-        }}
+        zoomToFit={zoomToFit}
+        azimuth={Math.PI}
       >
         <meshPhysicalMaterial
           map={textures.denim.albedo}
@@ -92,14 +86,13 @@ export default function TShirtModel(
           aoMap={textures.denim.ao}
           metalnessMap={textures.denim.metallic}
         />
-      </mesh>
-      <mesh
+      </Mesh>
+      <Mesh
         name="__var_neckline_neck_v__*front_panel"
-        castShadow
-        receiveShadow
         geometry={nodes['__var_neckline_neck_v__*front_panel'].geometry}
         position={[0, -1.152, 0.065]}
-        userData={{ name: '__var_neckline_neck_v__*front_panel' }}
+        zoomToFit={zoomToFit}
+        azimuth={0}
       >
         <meshPhysicalMaterial
           map={textures['houndstooth-fabric-weave'].albedo}
@@ -108,14 +101,12 @@ export default function TShirtModel(
           aoMap={textures['houndstooth-fabric-weave'].ao}
           metalnessMap={textures['houndstooth-fabric-weave'].metallic}
         />
-      </mesh>
-      <mesh
+      </Mesh>
+      <Mesh
         name="__var_neckline_neck_v__*neck_rim"
-        castShadow
-        receiveShadow
         geometry={nodes['__var_neckline_neck_v__*neck_rim'].geometry}
         position={[0, -1.152, 0.065]}
-        userData={{ name: '__var_neckline_neck_v__*neck_rim' }}
+        zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
           map={textures.denim.albedo}
@@ -124,14 +115,12 @@ export default function TShirtModel(
           aoMap={textures.denim.ao}
           metalnessMap={textures.denim.metallic}
         />
-      </mesh>
-      <mesh
+      </Mesh>
+      <Mesh
         name="shirt_interior"
-        castShadow
-        receiveShadow
         geometry={nodes.shirt_interior.geometry}
         position={[0, -1.152, 0.065]}
-        userData={{ name: 'shirt_interior' }}
+        zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
           map={textures.denim.albedo}
@@ -140,14 +129,12 @@ export default function TShirtModel(
           aoMap={textures.denim.ao}
           metalnessMap={textures.denim.metallic}
         />
-      </mesh>
-      <mesh
+      </Mesh>
+      <Mesh
         name="left_sleeve"
-        castShadow
-        receiveShadow
         geometry={nodes.left_sleeve.geometry}
         position={[0, -1.152, 0.065]}
-        userData={{ name: 'left_sleeve' }}
+        zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
           map={textures['red-plaid'].albedo}
@@ -156,14 +143,12 @@ export default function TShirtModel(
           aoMap={textures['red-plaid'].ao}
           metalnessMap={textures['red-plaid'].metallic}
         />
-      </mesh>
-      <mesh
+      </Mesh>
+      <Mesh
         name="right_sleeve"
-        castShadow
-        receiveShadow
         geometry={nodes.right_sleeve.geometry}
         position={[0, -1.152, 0.065]}
-        userData={{ name: 'right_sleeve' }}
+        zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
           map={textures['red-plaid'].albedo}
@@ -175,8 +160,33 @@ export default function TShirtModel(
           sheenColor={new THREE.Color(1, 0, 0)}
           sheenRoughness={2}
         />
-      </mesh>
+      </Mesh>
     </group>
+  )
+}
+
+type MeshProps = JSX.IntrinsicElements['mesh'] & {
+  zoomToFit: (
+    ref: React.RefObject<THREE.Mesh | THREE.Group>,
+    azimuth?: number,
+  ) => void
+  azimuth?: number
+}
+
+function Mesh(props: MeshProps) {
+  const ref = useRef<THREE.Mesh>(null)
+
+  return (
+    <mesh
+      {...props}
+      ref={ref}
+      onClick={(e) => {
+        e.stopPropagation()
+        props.zoomToFit(ref, props.azimuth)
+      }}
+    >
+      {props.children}
+    </mesh>
   )
 }
 

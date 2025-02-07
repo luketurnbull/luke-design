@@ -18,11 +18,16 @@ import { UserButton } from '@clerk/tanstack-start'
 import { Link } from '@tanstack/react-router'
 import CreateTShirtModal from './CreateTShirtModal'
 
+// I've created a main sidebar component that displays the user's models
+// I've made a "t-shirt" group that displays the user's t-shirts
+// I have made everything generic so that it can be reused for other types of models
 export default function MainSidebar() {
+  // Get all of the users models
   const identity = useAuth()
   const models = useQuery(api.models.getAllByUser, {
     userId: identity?.userId as string,
   })
+
   const profile = useQuery(api.models.profile)
 
   return (
@@ -53,8 +58,13 @@ export default function MainSidebar() {
                       params={{
                         modelId: model._id,
                       }}
-                      className="flex items-center gap-2"
-                      activeProps={{ className: 'text-black font-bold' }}
+                      className="flex items-center gap-2 "
+                      activeProps={{
+                        className: 'text-black font-bold',
+                      }}
+                      inactiveProps={{
+                        className: 'text-gray-500 font-light',
+                      }}
                     >
                       <Shirt />
                       {model.name}
