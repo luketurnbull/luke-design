@@ -11,9 +11,9 @@ export default function PointLight() {
     'Point Light 1',
     {
       intensity: {
-        value: 0.2,
+        value: 1,
         min: 0,
-        max: 1,
+        max: 2,
         step: 0.05,
         label: 'Intensity',
       },
@@ -25,16 +25,16 @@ export default function PointLight() {
         label: 'Distance',
       },
       decay: {
-        value: 2,
+        value: 0.5,
         min: 0,
         max: 5,
         step: 0.1,
         label: 'Decay',
       },
       position: {
-        x: 0,
-        y: 5,
-        z: 0,
+        x: 1.2,
+        y: 2.0,
+        z: 0.8,
       },
       showHelpers: {
         value: false,
@@ -48,9 +48,9 @@ export default function PointLight() {
     'Point Light 2',
     {
       intensity: {
-        value: 0.2,
+        value: 1,
         min: 0,
-        max: 1,
+        max: 2,
         step: 0.05,
         label: 'Intensity',
       },
@@ -62,16 +62,16 @@ export default function PointLight() {
         label: 'Distance',
       },
       decay: {
-        value: 2,
+        value: 0.3,
         min: 0,
         max: 5,
         step: 0.1,
         label: 'Decay',
       },
       position: {
-        x: 0,
-        y: 5,
-        z: 0,
+        x: -0.6,
+        y: 0.4,
+        z: -2.0,
       },
       showHelpers: {
         value: false,

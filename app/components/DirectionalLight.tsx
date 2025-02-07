@@ -11,16 +11,16 @@ export const DirectionalLight = () => {
     'Directional Light',
     {
       intensity: {
-        value: 5.0,
+        value: 1.3,
         min: 0,
         max: 5,
         step: 0.1,
         label: 'Intensity',
       },
       position: {
-        x: 0,
-        y: 7,
-        z: 1,
+        x: 1.6,
+        y: 0.7,
+        z: 3.4,
       },
       showHelper: {
         value: false,
