@@ -1,7 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '~/components/ui/button'
-import { api } from 'convex/_generated/api'
-import { useMutation, useQuery } from 'convex/react'
 import { SignedIn, SignedOut, SignIn, useAuth } from '@clerk/tanstack-start'
 import { ArrowRightIcon } from 'lucide-react'
 
@@ -10,15 +8,6 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const identity = useAuth()
-
-  const models = useQuery(api.models.getAllByUser, {
-    userId: identity?.userId as string,
-  })
-  const createModel = useMutation(api.models.create)
-
-  console.log(models)
-
   return (
     <>
       <main className="flex flex-col items-center justify-center h-full gap-4">

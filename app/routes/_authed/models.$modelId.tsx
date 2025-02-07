@@ -90,39 +90,42 @@ function RouteComponent() {
 
   // Once we have the model data, display it
   return (
-    <Canvas
-      dpr={[1, 2]}
-      shadows={rendererSettings.shadows}
-      gl={{
-        preserveDrawingBuffer: rendererSettings.preserveDrawingBuffer,
-        antialias: rendererSettings.antialias,
-        toneMapping: rendererSettings.toneMapping,
-        toneMappingExposure: rendererSettings.toneMappingExposure,
-        depth: rendererSettings.depth,
-        powerPreference: 'high-performance',
-      }}
-    >
-      {/*
+    <div className="h-full w-full relative">
+      <div className="absolute top-0 left-0 w-12 h-full bg-black/50 z-10"></div>
+      <Canvas
+        dpr={[1, 2]}
+        shadows={rendererSettings.shadows}
+        gl={{
+          preserveDrawingBuffer: rendererSettings.preserveDrawingBuffer,
+          antialias: rendererSettings.antialias,
+          toneMapping: rendererSettings.toneMapping,
+          toneMappingExposure: rendererSettings.toneMappingExposure,
+          depth: rendererSettings.depth,
+          powerPreference: 'high-performance',
+        }}
+      >
+        {/*
         Added a scene component to the canvas so we can control the camera and light
         This is a great way to start off a scene and add more complexity later
       */}
-      <Suspense fallback={null}>
-        <Scene />
-        <Preload all />
-      </Suspense>
+        <Suspense fallback={null}>
+          <Scene />
+          <Preload all />
+        </Suspense>
 
-      {/*
+        {/*
         Moved the post-processing into a separate component
         This is a great way to keep the scene clean and add more complexity later
       */}
-      <PostProcessing />
+        <PostProcessing />
 
-      {/*
+        {/*
         Added a bake shadows component to the scene so
         the shadows are baked and the scene is rendered faster
         This is great for performance if the scene is static
-      */}
-      <BakeShadows />
-    </Canvas>
+        */}
+        <BakeShadows />
+      </Canvas>
+    </div>
   )
 }

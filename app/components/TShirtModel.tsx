@@ -54,7 +54,6 @@ export default function TShirtModel(
     ref: React.RefObject<THREE.Group | THREE.Mesh>,
     azimuth?: number,
   ) => {
-    console.log('zoomToFit', ref, azimuth)
     if (!cameraControls || !ref.current) return
 
     const box = new THREE.Box3().setFromObject(ref.current)

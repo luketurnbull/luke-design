@@ -16,9 +16,9 @@ export default function Scene() {
     'Light',
     {
       intensity: {
-        value: 2,
+        value: 0.4,
         min: 0,
-        max: 10,
+        max: 5,
         step: 0.1,
         label: 'Intensity',
       },
@@ -37,7 +37,7 @@ export default function Scene() {
         label: 'Position Y',
       },
       positionZ: {
-        value: 2.5,
+        value: -10,
         min: -10,
         max: 10,
         step: 0.1,
