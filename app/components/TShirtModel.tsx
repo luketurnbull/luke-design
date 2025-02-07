@@ -85,6 +85,7 @@ export default function TShirtModel(
           roughnessMap={textures.denim.roughness}
           aoMap={textures.denim.ao}
           metalnessMap={textures.denim.metallic}
+          sheen={1}
         />
       </Mesh>
       <Mesh
@@ -100,6 +101,7 @@ export default function TShirtModel(
           roughnessMap={textures['houndstooth-fabric-weave'].roughness}
           aoMap={textures['houndstooth-fabric-weave'].ao}
           metalnessMap={textures['houndstooth-fabric-weave'].metallic}
+          sheen={1}
         />
       </Mesh>
       <Mesh
@@ -114,6 +116,7 @@ export default function TShirtModel(
           roughnessMap={textures.denim.roughness}
           aoMap={textures.denim.ao}
           metalnessMap={textures.denim.metallic}
+          sheen={1}
         />
       </Mesh>
       <Mesh
@@ -128,6 +131,7 @@ export default function TShirtModel(
           roughnessMap={textures.denim.roughness}
           aoMap={textures.denim.ao}
           metalnessMap={textures.denim.metallic}
+          sheen={1}
         />
       </Mesh>
       <Mesh
@@ -156,9 +160,9 @@ export default function TShirtModel(
           roughnessMap={textures['red-plaid'].roughness}
           aoMap={textures['red-plaid'].ao}
           metalnessMap={textures['red-plaid'].metallic}
-          sheen={0.1}
-          sheenColor={new THREE.Color(1, 0, 0)}
-          sheenRoughness={2}
+          sheen={1}
+          // sheenColor={new THREE.Color(1, 0, 0)}
+          // sheenRoughness={2}
         />
       </Mesh>
     </group>

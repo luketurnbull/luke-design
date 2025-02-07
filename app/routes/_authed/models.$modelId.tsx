@@ -11,11 +11,12 @@ import {
   Environment,
   RandomizedLight,
   AccumulativeShadows,
+  Preload,
 } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import TShirtModel from '~/components/TShirtModel'
 import * as THREE from 'three'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, Suspense } from 'react'
 import {
   EffectComposer,
   SMAA,
@@ -85,6 +86,7 @@ function RouteComponent() {
         // },
 
         depth: true,
+        powerPreference: 'high-performance',
       }}
     >
       {/*
@@ -111,7 +113,10 @@ function RouteComponent() {
         shadow-mapSize={[512, 512]}
       />
 
-      <Scene />
+      <Suspense fallback={null}>
+        <Scene />
+        <Preload all /> {/* Preload all assets */}
+      </Suspense>
 
       {/* Bake shadows for performance, shadows won't be moving in this static scene */}
       <BakeShadows />
