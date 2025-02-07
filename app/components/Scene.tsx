@@ -9,11 +9,13 @@ import TShirtModel from './TShirtModel'
 export default function Scene() {
   const cameraControlsRef = useRef<CameraControls>(null)
   const [controls, setControls] = useState<CameraControls | null>(null)
-  const lightRef = useRef<THREE.DirectionalLight>(null)
+  const directionalLightRef = useRef<THREE.DirectionalLight>(null)
+  const pointLightRef1 = useRef<THREE.PointLight>(null)
+  const pointLightRef2 = useRef<THREE.PointLight>(null)
 
   // Get light settings from Leva
-  const lightSettings = useControls(
-    'Light',
+  const directionalLightSettings = useControls(
+    'Directional Light',
     {
       intensity: {
         value: 0.4,
@@ -51,14 +53,78 @@ export default function Scene() {
     { collapsed: true },
   )
 
-  // Add light helper when showHelper is true
+  const ambientLightSettings = useControls(
+    'Ambient Light',
+    {
+      intensity: {
+        value: 0.2,
+        min: 0,
+        max: 1,
+        step: 0.05,
+        label: 'Intensity',
+      },
+    },
+    { collapsed: true },
+  )
+
+  const pointLightSettings = useControls(
+    'Point Lights',
+    {
+      intensity: {
+        value: 0.2,
+        min: 0,
+        max: 1,
+        step: 0.05,
+        label: 'Intensity',
+      },
+      distance: {
+        value: 0,
+        min: 0,
+        max: 100,
+        step: 1,
+        label: 'Distance',
+      },
+      decay: {
+        value: 2,
+        min: 0,
+        max: 5,
+        step: 0.1,
+        label: 'Decay',
+      },
+      showHelpers: {
+        value: false,
+        label: 'Show Helpers',
+      },
+    },
+    { collapsed: true },
+  )
+
+  // Add light helpers when showHelper is true
   useHelper(
-    lightSettings.showHelper
-      ? (lightRef as React.MutableRefObject<THREE.DirectionalLight>)
+    directionalLightSettings.showHelper
+      ? (directionalLightRef as React.MutableRefObject<THREE.DirectionalLight>)
       : null,
     THREE.DirectionalLightHelper,
     1,
     'red',
+  )
+
+  useHelper(
+    pointLightSettings.showHelpers
+      ? (pointLightRef1 as React.MutableRefObject<THREE.PointLight>)
+      : null,
+    THREE.PointLightHelper,
+    0.5,
+    'blue',
+  )
+
+  useHelper(
+    pointLightSettings.showHelpers
+      ? (pointLightRef2 as React.MutableRefObject<THREE.PointLight>)
+      : null,
+    THREE.PointLightHelper,
+    0.5,
+    'blue',
   )
 
   // Doing this so I can use the camera controls in the TShirtModel component
@@ -97,14 +163,33 @@ export default function Scene() {
          TODO: Add a point light to the scene for better lighting
        */}
       <directionalLight
-        ref={lightRef}
-        intensity={lightSettings.intensity}
+        ref={directionalLightRef}
+        intensity={directionalLightSettings.intensity}
         position={[
-          lightSettings.positionX,
-          lightSettings.positionY,
-          lightSettings.positionZ,
+          directionalLightSettings.positionX,
+          directionalLightSettings.positionY,
+          directionalLightSettings.positionZ,
         ]}
         castShadow
+      />
+
+      {/* Add soft ambient light to simulate light bounce */}
+      <ambientLight intensity={ambientLightSettings.intensity} />
+
+      {/* Add point lights for more dynamic lighting */}
+      <pointLight
+        ref={pointLightRef1}
+        position={[10, 5, 0]}
+        intensity={pointLightSettings.intensity}
+        distance={pointLightSettings.distance}
+        decay={pointLightSettings.decay}
+      />
+      <pointLight
+        ref={pointLightRef2}
+        position={[-10, 5, 0]}
+        intensity={pointLightSettings.intensity}
+        distance={pointLightSettings.distance}
+        decay={pointLightSettings.decay}
       />
 
       {/*
