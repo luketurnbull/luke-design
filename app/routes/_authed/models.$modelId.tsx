@@ -4,10 +4,11 @@ import { useQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { Id } from 'convex/_generated/dataModel'
 import { Canvas } from '@react-three/fiber'
-import { Environment, OrbitControls } from '@react-three/drei'
+import { CameraControls, Environment } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import TShirtModel from '~/components/TShirtModel'
 import * as THREE from 'three'
+import { useRef, useState, useEffect } from 'react'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -91,17 +92,39 @@ function RouteComponent() {
         shadow-mapSize={[512, 512]}
       />
 
-      <OrbitControls />
-
       <Scene />
     </Canvas>
   )
 }
 
 function Scene() {
+  // Create a ref for the camera controls
+  const cameraControlsRef = useRef<CameraControls>(null)
+  const [controls, setControls] = useState<CameraControls | null>(null)
+
+  // Only set the controls once they're initialized
+  useEffect(() => {
+    if (cameraControlsRef.current) {
+      setControls(cameraControlsRef.current)
+    }
+  }, [cameraControlsRef.current])
+
   return (
     <>
-      <TShirtModel />
+      {/*
+      Added a camera controls component to the scene so
+      I can pan around the model with ease
+      Added a smooth time and damping factor for smoother camera movement
+    */}
+      <CameraControls
+        ref={cameraControlsRef}
+        makeDefault
+        smoothTime={0.2}
+        // Disable zoom functionality
+        dollySpeed={0}
+      />
+
+      <TShirtModel cameraControls={controls} />
     </>
   )
 }

@@ -1,7 +1,9 @@
 import { GLTF } from 'three-stdlib'
 import * as THREE from 'three'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, CameraControls } from '@react-three/drei'
 import { useTextures } from '~/hooks/use-textures'
+import { useRef } from 'react'
+import { useLayoutEffect } from '@tanstack/react-router'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -20,16 +22,56 @@ type GLTFResult = GLTF & {
   }
 }
 
-export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
+// The TShirtModel component
+// This component is used to display the t-shirt model
+// I used gltf to r3f to deconstruct the model, so it's easier to access the nodes and materials
+// in a modular type friendly way
+export default function TShirtModel(
+  props: JSX.IntrinsicElements['group'] & {
+    cameraControls: CameraControls | null
+  },
+) {
+  // Using Draco compression to reduce the file size of the model
   const { nodes, materials } = useGLTF(
     '/models/t-shirt.glb',
     '/draco',
   ) as GLTFResult
 
-  const textures = useTextures()
+  const cameraControls = props.cameraControls
 
+  const textures = useTextures()
+  const groupRef = useRef<THREE.Group>(null)
+  const backPanelRef = useRef<THREE.Mesh>(null)
+
+  // Zoom to fit the model to the center of the screen when the component mounts
+  useLayoutEffect(() => {
+    zoomToFit(groupRef)
+  }, [cameraControls, groupRef.current])
+
+  // Zoom to fit the passed in ref to the center of the screen
+  // If an azimuth is passed in, rotate the camera to that azimuth
+  // Always level out elevation
+  const zoomToFit = (
+    ref: React.RefObject<THREE.Group | THREE.Mesh>,
+    azimuth?: number,
+  ) => {
+    if (!cameraControls || !ref.current) return
+
+    const box = new THREE.Box3().setFromObject(ref.current)
+    cameraControls.fitToBox(box, true, {})
+    cameraControls.rotatePolarTo(Math.PI / 2, true)
+    if (azimuth) {
+      cameraControls.rotateAzimuthTo(azimuth, true)
+    }
+  }
+
+  // Decided to use meshPhysicalMaterial for the t-shirt
+  // This is because it's the most realistic material for the t-shirt
+  // It has a roughness map, normal map, and metallic map
+  // It also has a sheen map, which is used to simulate the shine of the t-shirt
+  // More to play around with to see what works best
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} ref={groupRef}>
       <mesh
         name="__var_neckline__neck_v__*back_pannel"
         castShadow
@@ -37,9 +79,13 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         geometry={nodes['__var_neckline__neck_v__*back_pannel'].geometry}
         position={[0, -1.152, 0.065]}
         userData={{ name: '__var_neckline__neck_v__*back_pannel' }}
+        ref={backPanelRef}
+        onClick={() => {
+          console.log('Back panel clicked')
+          zoomToFit(backPanelRef, Math.PI)
+        }}
       >
         <meshPhysicalMaterial
-          color="red"
           map={textures.denim.albedo}
           normalMap={textures.denim.normal}
           roughnessMap={textures.denim.roughness}
@@ -56,7 +102,6 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         userData={{ name: '__var_neckline_neck_v__*front_panel' }}
       >
         <meshPhysicalMaterial
-          color="blue"
           map={textures['houndstooth-fabric-weave'].albedo}
           normalMap={textures['houndstooth-fabric-weave'].normal}
           roughnessMap={textures['houndstooth-fabric-weave'].roughness}
@@ -73,7 +118,6 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         userData={{ name: '__var_neckline_neck_v__*neck_rim' }}
       >
         <meshPhysicalMaterial
-          color="green"
           map={textures.denim.albedo}
           normalMap={textures.denim.normal}
           roughnessMap={textures.denim.roughness}
@@ -90,7 +134,6 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         userData={{ name: 'shirt_interior' }}
       >
         <meshPhysicalMaterial
-          color="yellow"
           map={textures.denim.albedo}
           normalMap={textures.denim.normal}
           roughnessMap={textures.denim.roughness}
@@ -107,7 +150,6 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         userData={{ name: 'left_sleeve' }}
       >
         <meshPhysicalMaterial
-          color="purple"
           map={textures['red-plaid'].albedo}
           normalMap={textures['red-plaid'].normal}
           roughnessMap={textures['red-plaid'].roughness}
@@ -124,7 +166,6 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
         userData={{ name: 'right_sleeve' }}
       >
         <meshPhysicalMaterial
-          //  color="purple"
           map={textures['red-plaid'].albedo}
           normalMap={textures['red-plaid'].normal}
           roughnessMap={textures['red-plaid'].roughness}
@@ -139,4 +180,5 @@ export default function TShirtModel(props: JSX.IntrinsicElements['group']) {
   )
 }
 
+// Preload the model
 useGLTF.preload('/models/t-shirt.glb')
