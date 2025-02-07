@@ -4,11 +4,26 @@ import { useQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { Id } from 'convex/_generated/dataModel'
 import { Canvas } from '@react-three/fiber'
-import { CameraControls, Environment } from '@react-three/drei'
+import {
+  BakeShadows,
+  CameraControls,
+  ContactShadows,
+  Environment,
+  RandomizedLight,
+  AccumulativeShadows,
+} from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import TShirtModel from '~/components/TShirtModel'
 import * as THREE from 'three'
 import { useRef, useState, useEffect } from 'react'
+import {
+  EffectComposer,
+  SMAA,
+  BrightnessContrast,
+  SSAO,
+  Bloom,
+} from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -54,11 +69,13 @@ function RouteComponent() {
       gl={{
         // Enable preserveDrawingBuffer for better performance
         preserveDrawingBuffer: true,
-        // Enable antialiasing for smoother edges
-        antialias: true,
+        // Using SMAA for better anti-aliasing
+        antialias: false,
         // Apply Reinhard tone mapping for realistic lighting
-        toneMapping: THREE.ReinhardToneMapping,
-        // Enable tone mapping for realistic lighting
+        // Reinhard does seem dull compared to the other tone mapping options
+        // toneMapping: THREE.ReinhardToneMapping,
+        // Can also use ACESFilmicToneMapping for a more vibrant look
+        toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 3,
 
         // Enable soft shadows, not sure how to do this in react-three-fiber
@@ -66,6 +83,8 @@ function RouteComponent() {
         // shadowMap: {
         //   type: THREE.PCFSoftShadowMap,
         // },
+
+        depth: true,
       }}
     >
       {/*
@@ -93,12 +112,53 @@ function RouteComponent() {
       />
 
       <Scene />
+
+      {/* Bake shadows for performance, shadows won't be moving in this static scene */}
+      <BakeShadows />
+
+      {/* Post Processing Effects */}
+      <EffectComposer multisampling={0}>
+        {/* Anti-aliasing */}
+        <SMAA />
+
+        {/* Ambient Occlusion for added depth,
+        This effect is too heavy for the scene, so I'm disabling it for now,
+
+         */}
+        {/* <SSAO
+          blendFunction={BlendFunction.MULTIPLY}
+          samples={31}
+          radius={0.5}
+          intensity={30}
+          luminanceInfluence={0.5}
+          bias={0.5}
+          worldDistanceThreshold={0.5}
+          worldDistanceFalloff={0.5}
+          worldProximityThreshold={0.5}
+          worldProximityFalloff={0.5}
+        /> */}
+
+        {/* Subtle bloom for fabric highlights */}
+        <Bloom
+          intensity={0.5}
+          luminanceThreshold={0.9}
+          luminanceSmoothing={0.025}
+          height={300}
+        />
+
+        {/* Color correction */}
+        <BrightnessContrast
+          brightness={0.02} // Subtle brightness boost
+          contrast={0.05} // Slight contrast enhancement
+        />
+      </EffectComposer>
     </Canvas>
   )
 }
 
 function Scene() {
   // Create a ref for the camera controls
+  // So I can access the camera controls from the TShirtModel component to update the camera position
   const cameraControlsRef = useRef<CameraControls>(null)
   const [controls, setControls] = useState<CameraControls | null>(null)
 
