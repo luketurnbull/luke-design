@@ -7,10 +7,11 @@ import { Canvas } from '@react-three/fiber'
 import { BakeShadows, Preload } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import * as THREE from 'three'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { useControls } from 'leva'
 import Scene from '~/components/Scene'
 import PostProcessing from '~/components/PostProcessing'
+import { MaterialType } from '~/hooks/use-textures'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -34,6 +35,9 @@ function RouteComponent() {
       modelId: params.modelId as Id<'models'>,
     }),
   )
+
+  const [selectedMaterial, setSelectedMaterial] =
+    useState<MaterialType>('denim')
 
   // Add Leva controls for renderer settings
   const rendererSettings = useControls(
@@ -91,7 +95,10 @@ function RouteComponent() {
   // Once we have the model data, display it
   return (
     <div className="h-full w-full relative">
-      <Textures />
+      <Textures
+        selectedMaterial={selectedMaterial}
+        onSelectMaterial={setSelectedMaterial}
+      />
       <Canvas
         dpr={[1, 2]}
         shadows={rendererSettings.shadows}
@@ -109,7 +116,7 @@ function RouteComponent() {
         This is a great way to start off a scene and add more complexity later
       */}
         <Suspense fallback={null}>
-          <Scene />
+          <Scene selectedMaterial={selectedMaterial} />
           <Preload all />
         </Suspense>
 
@@ -133,39 +140,44 @@ function RouteComponent() {
 // Material options with their display names and paths
 const MATERIALS = [
   {
-    id: 'denim',
+    id: 'denim' as MaterialType,
     name: 'Denim',
     preview: '/material/denim/albedo.png',
   },
   {
-    id: 'red-plaid',
+    id: 'red-plaid' as MaterialType,
     name: 'Red Plaid',
     preview: '/material/red-plaid/albedo.png',
   },
   {
-    id: 'houndstooth-fabric-weave',
+    id: 'houndstooth-fabric-weave' as MaterialType,
     name: 'Houndstooth',
     preview: '/material/houndstooth-fabric-weave/albedo.png',
   },
 ] as const
 
-function Textures() {
+type TexturesProps = {
+  selectedMaterial: MaterialType
+  onSelectMaterial: (material: MaterialType) => void
+}
+
+function Textures({ selectedMaterial, onSelectMaterial }: TexturesProps) {
   return (
     <div className="absolute flex flex-col gap-2 top-3 left-3 z-10">
       {MATERIALS.map((material) => (
         <button
           key={material.id}
-          className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white/20 hover:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/60 focus-visible:ring-2 focus-visible:ring-white/60 transition-colors"
+          className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-cover bg-center ${
+            selectedMaterial === material.id
+              ? 'border-white ring-2 ring-white/60'
+              : 'border-white/20 hover:border-white/40'
+          }`}
           style={{
             backgroundImage: `url(${material.preview})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
           }}
           aria-label={`Select ${material.name} texture`}
-          onClick={() => {
-            // TODO: Implement texture selection
-            console.log(`Selected ${material.id} texture`)
-          }}
+          aria-pressed={selectedMaterial === material.id}
+          onClick={() => onSelectMaterial(material.id)}
         />
       ))}
     </div>

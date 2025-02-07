@@ -4,6 +4,7 @@ import { useGLTF, CameraControls } from '@react-three/drei'
 import { useTextures } from '~/hooks/use-textures'
 import { useRef } from 'react'
 import { useLayoutEffect } from '@tanstack/react-router'
+import { MaterialType } from '~/hooks/use-textures'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -29,6 +30,7 @@ type GLTFResult = GLTF & {
 export default function TShirtModel(
   props: JSX.IntrinsicElements['group'] & {
     cameraControls: CameraControls | null
+    selectedMaterial: MaterialType
   },
 ) {
   // Using Draco compression to reduce the file size of the model
@@ -37,7 +39,7 @@ export default function TShirtModel(
     '/draco',
   ) as GLTFResult
 
-  const cameraControls = props.cameraControls
+  const { cameraControls, selectedMaterial, ...restProps } = props
 
   const textures = useTextures()
   const groupRef = useRef<THREE.Group>(null)
@@ -64,13 +66,15 @@ export default function TShirtModel(
     }
   }
 
+  const selectedTextures = textures[selectedMaterial]
+
   // Decided to use meshPhysicalMaterial for the t-shirt
   // This is because it's the most realistic material for the t-shirt
   // It has a roughness map, normal map, and metallic map
   // It also has a sheen map, which is used to simulate the shine of the t-shirt
   // More to play around with to see what works best
   return (
-    <group {...props} dispose={null} ref={groupRef}>
+    <group {...restProps} dispose={null} ref={groupRef}>
       <Mesh
         name="__var_neckline__neck_v__*back_pannel"
         geometry={nodes['__var_neckline__neck_v__*back_pannel'].geometry}
@@ -79,11 +83,11 @@ export default function TShirtModel(
         azimuth={Math.PI}
       >
         <meshPhysicalMaterial
-          map={textures.denim.albedo}
-          normalMap={textures.denim.normal}
-          roughnessMap={textures.denim.roughness}
-          aoMap={textures.denim.ao}
-          metalnessMap={textures.denim.metallic}
+          map={selectedTextures.albedo}
+          normalMap={selectedTextures.normal}
+          roughnessMap={selectedTextures.roughness}
+          aoMap={selectedTextures.ao}
+          metalnessMap={selectedTextures.metallic}
           sheen={1}
         />
       </Mesh>
@@ -95,11 +99,11 @@ export default function TShirtModel(
         azimuth={0}
       >
         <meshPhysicalMaterial
-          map={textures['houndstooth-fabric-weave'].albedo}
-          normalMap={textures['houndstooth-fabric-weave'].normal}
-          roughnessMap={textures['houndstooth-fabric-weave'].roughness}
-          aoMap={textures['houndstooth-fabric-weave'].ao}
-          metalnessMap={textures['houndstooth-fabric-weave'].metallic}
+          map={selectedTextures.albedo}
+          normalMap={selectedTextures.normal}
+          roughnessMap={selectedTextures.roughness}
+          aoMap={selectedTextures.ao}
+          metalnessMap={selectedTextures.metallic}
           sheen={1}
         />
       </Mesh>
@@ -110,11 +114,11 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
-          map={textures.denim.albedo}
-          normalMap={textures.denim.normal}
-          roughnessMap={textures.denim.roughness}
-          aoMap={textures.denim.ao}
-          metalnessMap={textures.denim.metallic}
+          map={selectedTextures.albedo}
+          normalMap={selectedTextures.normal}
+          roughnessMap={selectedTextures.roughness}
+          aoMap={selectedTextures.ao}
+          metalnessMap={selectedTextures.metallic}
           sheen={1}
         />
       </Mesh>
@@ -125,11 +129,11 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
-          map={textures.denim.albedo}
-          normalMap={textures.denim.normal}
-          roughnessMap={textures.denim.roughness}
-          aoMap={textures.denim.ao}
-          metalnessMap={textures.denim.metallic}
+          map={selectedTextures.albedo}
+          normalMap={selectedTextures.normal}
+          roughnessMap={selectedTextures.roughness}
+          aoMap={selectedTextures.ao}
+          metalnessMap={selectedTextures.metallic}
           sheen={1}
         />
       </Mesh>
@@ -140,11 +144,12 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
-          map={textures['red-plaid'].albedo}
-          normalMap={textures['red-plaid'].normal}
-          roughnessMap={textures['red-plaid'].roughness}
-          aoMap={textures['red-plaid'].ao}
-          metalnessMap={textures['red-plaid'].metallic}
+          map={selectedTextures.albedo}
+          normalMap={selectedTextures.normal}
+          roughnessMap={selectedTextures.roughness}
+          aoMap={selectedTextures.ao}
+          metalnessMap={selectedTextures.metallic}
+          sheen={1}
         />
       </Mesh>
       <Mesh
@@ -154,14 +159,12 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
       >
         <meshPhysicalMaterial
-          map={textures['red-plaid'].albedo}
-          normalMap={textures['red-plaid'].normal}
-          roughnessMap={textures['red-plaid'].roughness}
-          aoMap={textures['red-plaid'].ao}
-          metalnessMap={textures['red-plaid'].metallic}
+          map={selectedTextures.albedo}
+          normalMap={selectedTextures.normal}
+          roughnessMap={selectedTextures.roughness}
+          aoMap={selectedTextures.ao}
+          metalnessMap={selectedTextures.metallic}
           sheen={1}
-          // sheenColor={new THREE.Color(1, 0, 0)}
-          // sheenRoughness={2}
         />
       </Mesh>
     </group>

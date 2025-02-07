@@ -40,11 +40,12 @@ Priorities:
 - [x] Refine scene to look realistic and add lighting (Use custom shader for lighting?)
 - [x] HDR Environment map?
 - [x] Directional and spot light, add to Tweakpane or Leva UI to test
-- [ ] Display textures in a panel
-- [ ] Allow user to add different textures to the model
+- [x] Display textures in a panel
+- [x] Allow user to add different textures to the model
+- [ ] Allow user to add materials to different parts of the model
 - [ ] Allow user to change colour of the model
 - [ ] Add delete button functionality to delete a model
-- [ ] Tone mapping? Add to Tweakpane or Leva UI to test
+- [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
 - [ ] Documentation
 
 ## Would be nice to have

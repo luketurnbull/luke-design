@@ -4,9 +4,14 @@ import { Environment, CameraControls } from '@react-three/drei'
 import TShirtModel from './TShirtModel'
 import { DirectionalLight } from './DirectionalLight'
 import PointLight from './PointLight'
+import { MaterialType } from '~/hooks/use-textures'
+
+type SceneProps = {
+  selectedMaterial: MaterialType
+}
 
 // Set up the Scene with light and camera controls
-export default function Scene() {
+export default function Scene({ selectedMaterial }: SceneProps) {
   const cameraControlsRef = useRef<CameraControls>(null)
   const [controls, setControls] = useState<CameraControls | null>(null)
 
@@ -73,7 +78,10 @@ export default function Scene() {
         This is where the model is rendered
         I have passed the camera controls to the component so we can pan around the model
       */}
-      <TShirtModel cameraControls={controls} />
+      <TShirtModel
+        cameraControls={controls}
+        selectedMaterial={selectedMaterial}
+      />
     </>
   )
 }
