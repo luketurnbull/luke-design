@@ -50,7 +50,7 @@ export default function MainSidebar() {
           </CreateTShirtModal>
           <SidebarGroupContent>
             <SidebarMenu>
-              {models?.map((model) => (
+              {models?.map((model, index) => (
                 <SidebarMenuItem key={model._id}>
                   <SidebarMenuButton asChild>
                     <Link
@@ -58,7 +58,7 @@ export default function MainSidebar() {
                       params={{
                         modelId: model._id,
                       }}
-                      className="flex items-center gap-2 "
+                      className="flex items-center gap-2"
                       activeProps={{
                         className: 'text-black font-bold',
                       }}
@@ -66,7 +66,12 @@ export default function MainSidebar() {
                         className: 'text-gray-500 font-light',
                       }}
                     >
-                      <Shirt />
+                      <div className="relative -ml-[6px]">
+                        <Shirt className="w-7 h-7" />
+                        <span className="absolute inset-0 mt-[1px] flex items-center justify-center text-xs font-medium">
+                          {index + 1}
+                        </span>
+                      </div>
                       {model.name}
                     </Link>
                   </SidebarMenuButton>
