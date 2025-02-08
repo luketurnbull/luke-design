@@ -47,7 +47,7 @@ function RouteComponent() {
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <Link
-                      to="/dashboard"
+                      to="/"
                       activeProps={{
                         className: 'font-bold',
                       }}
