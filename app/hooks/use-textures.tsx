@@ -1,5 +1,5 @@
 import { useTexture } from '@react-three/drei'
-import { Texture } from 'three'
+import { Texture, Color } from 'three'
 
 export type MaterialType = 'denim' | 'red-plaid' | 'houndstooth-fabric-weave'
 
@@ -104,5 +104,50 @@ export function useTextures() {
     },
   }
 
-  return textures
+  // Created a map to access the texture details by the material type
+  // Needed to make the displacement scale and bias different for each material
+  // This is because the roughness and height maps are different for each material
+  // And the displacement scale and bias need to be different to get a good look
+  const textureDetails: Record<
+    MaterialType,
+    {
+      bumpScale: number
+      displacementScale: number
+      displacementBias: number
+      roughness: number
+      metalness: number
+      sheen: number
+      sheenColor: Color
+    }
+  > = {
+    denim: {
+      bumpScale: 1000,
+      displacementScale: 0,
+      displacementBias: 0,
+      roughness: 1,
+      metalness: 0,
+      sheen: 1,
+      sheenColor: new Color(1, 1, 1),
+    },
+    'red-plaid': {
+      bumpScale: 1000,
+      displacementScale: 0.005,
+      displacementBias: -0.0025,
+      roughness: 1,
+      metalness: 0,
+      sheen: 1,
+      sheenColor: new Color(1, 1, 1),
+    },
+    'houndstooth-fabric-weave': {
+      bumpScale: 1000,
+      displacementScale: 0.003,
+      displacementBias: -0.002,
+      roughness: 1,
+      metalness: 0,
+      sheen: 1,
+      sheenColor: new Color(1, 1, 1),
+    },
+  }
+
+  return { textures, textureDetails }
 }

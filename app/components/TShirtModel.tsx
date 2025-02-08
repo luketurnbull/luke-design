@@ -41,7 +41,7 @@ export default function TShirtModel(
 
   const { cameraControls, selectedMaterial, ...restProps } = props
 
-  const textures = useTextures()
+  const { textures, textureDetails } = useTextures()
   const groupRef = useRef<THREE.Group>(null)
 
   // Zoom to fit the model to the center of the screen when the component mounts
@@ -83,9 +83,15 @@ export default function TShirtModel(
         roughnessMap: selectedTextures.roughness,
         aoMap: selectedTextures.ao,
         metalnessMap: selectedTextures.metallic,
-        metalness: 0,
-        roughness: 1,
-        sheen: 1,
+        metalness: textureDetails[selectedMaterial].metalness,
+        roughness: textureDetails[selectedMaterial].roughness,
+        sheen: textureDetails[selectedMaterial].sheen,
+        sheenColor: textureDetails[selectedMaterial].sheenColor,
+        bumpMap: selectedTextures.height,
+        bumpScale: textureDetails[selectedMaterial].bumpScale,
+        displacementMap: selectedTextures.height,
+        displacementScale: textureDetails[selectedMaterial].displacementScale,
+        displacementBias: textureDetails[selectedMaterial].displacementBias,
       })
     }
 
