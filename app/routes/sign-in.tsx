@@ -27,7 +27,7 @@ function SignIn() {
         </SignedOut>
         <SignedIn>
           <Button asChild>
-            <Link to="/dashboard">
+            <Link to="/">
               <ArrowRightIcon className="w-4 h-4" />
               Go to dashboard
             </Link>
