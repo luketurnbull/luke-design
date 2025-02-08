@@ -5,7 +5,6 @@ import {
   redirect,
   useMatches,
 } from '@tanstack/react-router'
-import { SignIn } from '@clerk/tanstack-start'
 import { SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar'
 import {
   Breadcrumb,
@@ -33,11 +32,9 @@ export const Route = createFileRoute('/_authed')({
   },
   errorComponent: ({ error }) => {
     if (error.message === 'Not authenticated') {
-      return (
-        <div className="flex items-center justify-center p-12">
-          <SignIn routing="hash" forceRedirectUrl={window.location.href} />
-        </div>
-      )
+      throw redirect({
+        to: '/sign-in',
+      })
     }
 
     throw error
