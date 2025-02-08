@@ -33,7 +33,7 @@ export default function MainSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-4 overflow-hidden">
+        <div className="flex items-center gap-4 overflow-hidden py-2">
           <UserButton />
           <span className="group-data-[collapsed=true]:hidden">
             {profile?.name}

@@ -1,12 +1,23 @@
-import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+  useParams,
+} from '@tanstack/react-router'
 import { SignIn } from '@clerk/tanstack-start'
 import { SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
+  BreadcrumbSeparator,
 } from '~/components/ui/breadcrumb'
 import MainSidebar from '~/components/MainSidebar'
+import { api } from 'convex/_generated/api'
+import { useConvexQuery } from '@convex-dev/react-query'
+import { Id } from 'convex/_generated/dataModel'
+import { Loader2 } from 'lucide-react'
 
 /**
  * This route is used to wrap the entire application in a sidebar and breadcrumb.
@@ -35,6 +46,14 @@ export const Route = createFileRoute('/_authed')({
 })
 
 function RouteComponent() {
+  // Use the router's useParams hook to get the modelId
+  const params = useParams({ from: '/_authed/models/$modelId' })
+  const modelId = params?.modelId as Id<'models'> | undefined
+  const model = useConvexQuery(
+    api.models.getById,
+    modelId ? { modelId } : 'skip',
+  )
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="flex h-screen w-full">
@@ -56,6 +75,26 @@ function RouteComponent() {
                       Dashboard
                     </Link>
                   </BreadcrumbItem>
+                  {modelId && (
+                    <>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        {model ? (
+                          <Link
+                            to="/models/$modelId"
+                            params={{ modelId }}
+                            activeProps={{
+                              className: 'font-bold',
+                            }}
+                          >
+                            {model.name}
+                          </Link>
+                        ) : (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        )}
+                      </BreadcrumbItem>
+                    </>
+                  )}
                 </BreadcrumbList>
               </Breadcrumb>
             </nav>

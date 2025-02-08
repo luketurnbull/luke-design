@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_authed/')({
 function RouteComponent() {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
-      <div className="flex flex-col gap-2 mb-12 p-4">
+      <div className="flex flex-col gap-2 mb-12 p-6">
         <h2 className="text-2xl md:text-6xl font-bold mb-6">
           Design your own t-shirts
         </h2>
