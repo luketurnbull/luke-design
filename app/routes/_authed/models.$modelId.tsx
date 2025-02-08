@@ -7,7 +7,7 @@ import { BakeShadows, Preload } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import * as THREE from 'three'
 import { Suspense, useCallback } from 'react'
-import { useControls } from 'leva'
+import { Leva, useControls } from 'leva'
 import Scene from '~/components/Scene'
 import PostProcessing from '~/components/PostProcessing'
 import { MaterialType } from '~/hooks/use-textures'
@@ -106,6 +106,8 @@ function RouteComponent() {
   // Once we have the model data, display it
   return (
     <div className="h-full w-full relative">
+      <Leva collapsed={true} />
+
       <TextureSelector
         selectedMaterial={currentMaterial}
         onSelectMaterial={handleMaterialChange}
