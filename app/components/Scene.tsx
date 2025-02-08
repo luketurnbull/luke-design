@@ -8,10 +8,14 @@ import { MaterialType } from '~/hooks/use-textures'
 
 type SceneProps = {
   selectedMaterial: MaterialType | undefined
+  isChangingMaterial: boolean
 }
 
 // Set up the Scene with light and camera controls
-export default function Scene({ selectedMaterial }: SceneProps) {
+export default function Scene({
+  selectedMaterial,
+  isChangingMaterial,
+}: SceneProps) {
   const cameraControlsRef = useRef<CameraControls>(null)
   const [controls, setControls] = useState<CameraControls | null>(null)
 
@@ -81,6 +85,7 @@ export default function Scene({ selectedMaterial }: SceneProps) {
       <TShirtModel
         cameraControls={controls}
         selectedMaterial={selectedMaterial}
+        isChangingMaterial={isChangingMaterial}
       />
     </>
   )

@@ -5,6 +5,7 @@ import { useTextures } from '~/hooks/use-textures'
 import { useRef, useMemo } from 'react'
 import { useLayoutEffect } from '@tanstack/react-router'
 import { MaterialType } from '~/hooks/use-textures'
+import { useSpring, animated } from '@react-spring/three'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -31,6 +32,7 @@ export default function TShirtModel(
   props: JSX.IntrinsicElements['group'] & {
     cameraControls: CameraControls | null
     selectedMaterial: MaterialType | undefined
+    isChangingMaterial: boolean
   },
 ) {
   // Using Draco compression to reduce the file size of the model
@@ -39,10 +41,22 @@ export default function TShirtModel(
     '/draco',
   ) as GLTFResult
 
-  const { cameraControls, selectedMaterial, ...restProps } = props
+  const { cameraControls, selectedMaterial, isChangingMaterial, ...restProps } =
+    props
 
-  const { textures, textureDetails } = useTextures()
+  const { textures } = useTextures()
   const groupRef = useRef<THREE.Group>(null)
+  const prevMaterialRef = useRef<THREE.MeshPhysicalMaterial | null>(null)
+
+  // Add spinning animation
+  const { rotationY } = useSpring({
+    rotationY: isChangingMaterial ? 7 : 0,
+    config: {
+      mass: 2,
+      tension: 45,
+      friction: 15,
+    },
+  })
 
   // Zoom to fit the model to the center of the screen when the component mounts
   useLayoutEffect(() => {
@@ -71,51 +85,81 @@ export default function TShirtModel(
     }
   }
 
-  // Decided to use meshPhysicalMaterial for the t-shirt
+  // Using meshPhysicalMaterial for the t-shirt
   // This is because it's the most realistic material for fabric
   // It has a lot of settings to play around with
+  // Especially "sheen" which is good for fabric surfaces
   const material = useMemo(() => {
-    if (selectedMaterial) {
-      const selectedTextures = textures[selectedMaterial]
-      return new THREE.MeshPhysicalMaterial({
-        map: selectedTextures.albedo,
-        normalMap: selectedTextures.normal,
-        normalScale: new THREE.Vector2(2, 2),
-        roughnessMap: selectedTextures.roughness,
-        sheenRoughnessMap: selectedTextures.roughness,
-        aoMap: selectedTextures.ao,
-        metalnessMap: selectedTextures.metallic,
-        metalness: textureDetails[selectedMaterial].metalness,
-        roughness: textureDetails[selectedMaterial].roughness,
-        sheen: textureDetails[selectedMaterial].sheen,
-        sheenColor: textureDetails[selectedMaterial].sheenColor,
-        bumpMap: selectedTextures.height,
-        bumpScale: textureDetails[selectedMaterial].bumpScale,
-        // displacementMap: selectedTextures.height,
-        // displacementScale: textureDetails[selectedMaterial].displacementScale,
-        // displacementBias: textureDetails[selectedMaterial].displacementBias,
-        thicknessMap: selectedTextures.height,
-        thickness: 1000,
-      })
+    const materialProps: THREE.MeshPhysicalMaterialParameters = {
+      transparent: true,
+      reflectivity: 0,
+      metalness: 0,
+      roughness: 1,
+      sheen: 1,
+      sheenColor: '#ffffff',
+      sheenRoughness: 1,
+      bumpScale: 1000,
     }
 
-    return new THREE.MeshPhysicalMaterial({
-      color: '#ffffff',
-      roughness: 0.5,
-      metalness: 0,
-      sheen: 1,
-    })
+    if (selectedMaterial) {
+      // Add the texture map
+      materialProps.map = textures[selectedMaterial].albedo
+
+      // Add the normal map
+      materialProps.normalMap = textures[selectedMaterial].normal
+      materialProps.normalScale = new THREE.Vector2(2, 2)
+
+      // Add the ao map
+      materialProps.aoMap = textures[selectedMaterial].ao
+      materialProps.aoMapIntensity = 1
+
+      // Add the metalness map
+      materialProps.metalnessMap = textures[selectedMaterial].metallic
+      materialProps.metalness = 0
+
+      // Add the bump map
+      materialProps.bumpMap = textures[selectedMaterial].height
+      materialProps.bumpScale = 1000
+
+      // Add the roughness map if it exists
+      if (textures[selectedMaterial].roughness) {
+        materialProps.roughnessMap = textures[selectedMaterial].roughness
+        materialProps.sheenRoughnessMap = textures[selectedMaterial].roughness
+        materialProps.roughness = 1
+      }
+    } else {
+      // If no material is selected, use the default material for the white t-shirt
+      materialProps.color = '#ffffff'
+    }
+
+    const newMaterial = new THREE.MeshPhysicalMaterial(materialProps)
+
+    // Store the previous material for cleanup
+    if (prevMaterialRef.current) {
+      prevMaterialRef.current.dispose()
+    }
+    prevMaterialRef.current = newMaterial
+
+    return newMaterial
   }, [selectedMaterial, textures])
 
-  // Cleanup material on unmount or when it changes
+  // Cleanup material on unmount
   useLayoutEffect(() => {
     return () => {
       material.dispose()
+      if (prevMaterialRef.current) {
+        prevMaterialRef.current.dispose()
+      }
     }
   }, [material])
 
   return (
-    <group {...restProps} dispose={null} ref={groupRef}>
+    <animated.group
+      {...restProps}
+      dispose={null}
+      ref={groupRef}
+      rotation-y={rotationY.to((r) => r % (Math.PI * 2))}
+    >
       <Mesh
         name="__var_neckline__neck_v__*back_pannel"
         geometry={nodes['__var_neckline__neck_v__*back_pannel'].geometry}
@@ -160,7 +204,7 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
         material={material}
       />
-    </group>
+    </animated.group>
   )
 }
 
@@ -174,15 +218,19 @@ type MeshProps = JSX.IntrinsicElements['mesh'] & {
 
 function Mesh(props: MeshProps) {
   const ref = useRef<THREE.Mesh>(null)
+  const { zoomToFit, ...restProps } = props
 
   return (
     <mesh
-      {...props}
+      {...restProps}
       ref={ref}
       onClick={(e) => {
         e.stopPropagation()
-        props.zoomToFit(ref, props.azimuth)
+        zoomToFit(ref, props.azimuth)
       }}
+      castShadow
+      receiveShadow
+      key={props.name}
     />
   )
 }

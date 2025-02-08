@@ -6,12 +6,12 @@ import { Canvas } from '@react-three/fiber'
 import { BakeShadows, Preload } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import * as THREE from 'three'
-import { Suspense, useCallback } from 'react'
+import { Suspense, useCallback, useState } from 'react'
 import { Leva, useControls } from 'leva'
 import Scene from '~/components/Scene'
-import PostProcessing from '~/components/PostProcessing'
 import { MaterialType } from '~/hooks/use-textures'
 import TextureSelector from '~/components/TextureSelector'
+import PostProcessing from '~/components/PostProcessing'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -33,15 +33,21 @@ function RouteComponent() {
   const modelId = params.modelId as Id<'models'>
   const model = useConvexQuery(api.models.getById, { modelId })
   const updateMaterial = useConvexMutation(api.models.updateMaterial)
+  const [isChangingMaterial, setIsChangingMaterial] = useState(false)
 
   const handleMaterialChange = useCallback(
     async (material: MaterialType | undefined) => {
-      // Convert undefined to null for database storage
-      const dbMaterial = material === undefined ? null : material
-      await updateMaterial({
-        modelId,
-        material: dbMaterial,
-      })
+      setIsChangingMaterial(true)
+      try {
+        // Convert undefined to null for database storage
+        const dbMaterial = material === undefined ? null : material
+        await updateMaterial({
+          modelId,
+          material: dbMaterial,
+        })
+      } finally {
+        setIsChangingMaterial(false)
+      }
     },
     [modelId, updateMaterial],
   )
@@ -67,6 +73,7 @@ function RouteComponent() {
         value: true,
         label: 'Enable Shadows',
       },
+
       // Happy with either ACES Filmic or Reinhard, although to me
       // ACES Filmic looks better
       toneMapping: {
@@ -126,24 +133,26 @@ function RouteComponent() {
         }}
       >
         {/*
-        Added a scene component to the canvas so we can control the camera and light
-        This is a great way to start off a scene and add more complexity later
-      */}
+          Added a scene component to the canvas so we can control the camera and light
+          This is a great way to start off a scene and add more complexity later
+        */}
         <Suspense fallback={null}>
-          <Scene selectedMaterial={currentMaterial} />
+          <Scene
+            selectedMaterial={currentMaterial}
+            isChangingMaterial={isChangingMaterial}
+          />
           <Preload all />
         </Suspense>
 
         {/*
-        Moved the post-processing into a separate component
-        This is a great way to keep the scene clean and add more complexity later
-      */}
+          Moved the post-processing into a separate component to keep the scene clean
+        */}
         <PostProcessing />
 
         {/*
-        Added a bake shadows component to the scene so
-        the shadows are baked and the scene is rendered faster
-        This is great for performance if the scene is static
+          Added a bake shadows component to the scene so
+          the shadows are baked and the scene is rendered faster
+          This is great for performance if the scene is static
         */}
         <BakeShadows />
       </Canvas>

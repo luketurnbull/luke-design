@@ -11,7 +11,7 @@ export default function PostProcessing() {
     'Post Processing',
     {
       brightness: {
-        value: 0.0,
+        value: 0.07,
         min: -1,
         max: 1,
         step: 0.01,
