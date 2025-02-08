@@ -14,8 +14,10 @@ export const Route = createFileRoute('/_authed/dashboard')({
 function RouteComponent() {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
-      <div className="flex flex-col gap-2 mb-12">
-        <h2 className="text-6xl font-bold mb-6">Design your own t-shirts</h2>
+      <div className="flex flex-col gap-2 mb-12 p-4">
+        <h2 className="text-2xl md:text-6xl font-bold mb-6">
+          Design your own t-shirts
+        </h2>
         <p className="text-muted-foreground">
           Get started by creating a new t-shirt design. click{' '}
           <CreateTShirtModal>

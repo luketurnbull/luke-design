@@ -46,11 +46,13 @@ Priorities:
 - [x] Work on better lighting
 - [x] Better changing states with react spring?
 - [ ] Add delete button functionality to delete a model
+- [ ] Collapse the sidebar by default
 - [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
 - [ ] Documentation
 
 ## Would be nice to have
 
+- [ ] Hover over mesh to highlight?
 - [ ] Allow user to add materials to different parts of the model
 - [ ] Allow user to change colour of the model
 - [ ] Make user settings, let them tinker with the scene and lighting?
