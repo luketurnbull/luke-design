@@ -36,7 +36,7 @@ export const Route = createFileRoute('/_authed')({
 
 function RouteComponent() {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <div className="flex h-screen w-full">
         <MainSidebar />
         <div className="flex-1 grid grid-rows-[auto_1fr] min-h-0 overflow-hidden w-full">

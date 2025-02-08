@@ -31,7 +31,7 @@ export default function MainSidebar() {
   const profile = useQuery(api.models.profile)
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" defaultCollapsed={true}>
       <SidebarHeader>
         <div className="flex items-center gap-4 overflow-hidden">
           <UserButton />
