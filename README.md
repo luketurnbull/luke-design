@@ -45,14 +45,14 @@ Priorities:
 - [x] Add Leva controls to materials to play with settings
 - [x] Work on better lighting
 - [x] Better changing states with react spring?
-- [ ] Add delete button functionality to delete a model
-- [ ] Collapse the sidebar by default
-- [ ] Add go back button when zoomed in on the model
-- [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
+- [x] Add delete button functionality to delete a model
+- [x] Collapse the sidebar by default
 - [ ] Documentation
 
 ## Would be nice to have
 
+- [ ] Add go back button when zoomed in on the model
+- [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
 - [ ] Hover over mesh to highlight?
 - [ ] Allow user to add materials to different parts of the model
 - [ ] Allow user to change colour of the model
