@@ -3,7 +3,7 @@ import {
   Link,
   Outlet,
   redirect,
-  useParams,
+  useMatches,
 } from '@tanstack/react-router'
 import { SignIn } from '@clerk/tanstack-start'
 import { SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar'
@@ -46,9 +46,13 @@ export const Route = createFileRoute('/_authed')({
 })
 
 function RouteComponent() {
-  // Use the router's useParams hook to get the modelId
-  const params = useParams({ from: '/_authed/models/$modelId' })
-  const modelId = params?.modelId as Id<'models'> | undefined
+  // Get all active route matches
+  const matches = useMatches()
+  // Find the model route match if it exists
+  const modelMatch = matches.find(
+    (match) => match.routeId === '/_authed/models/$modelId',
+  )
+  const modelId = modelMatch?.params?.modelId as Id<'models'> | undefined
   const model = useConvexQuery(
     api.models.getById,
     modelId ? { modelId } : 'skip',
