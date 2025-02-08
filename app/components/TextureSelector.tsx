@@ -1,4 +1,6 @@
 import { MaterialType } from '~/hooks/use-textures'
+import { cva } from 'class-variance-authority'
+import { cn } from '~/lib/utils'
 
 // Material options with their display names and paths
 const MATERIALS = [
@@ -19,6 +21,60 @@ const MATERIALS = [
   },
 ] as const
 
+const textureSelectorButtonVariants = cva(
+  'w-16 h-16 rounded-md overflow-hidden border-2 transition-colors border-black text-sm font-medium  hover:scale-110 transition-transform duration-200',
+  {
+    variants: {
+      variant: {
+        default: 'bg-cover bg-center',
+        none: 'bg-white text-primary hover:bg-accent hover:text-accent-foreground',
+      },
+      selected: {
+        true: 'border-black ring-2 ring-black/60',
+        false: '',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      selected: false,
+    },
+  },
+)
+
+interface TextureSelectorButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'none'
+  selected?: boolean
+  preview?: string
+  label: string
+}
+
+const TextureSelectorButton = ({
+  variant = 'default',
+  selected = false,
+  preview,
+  label,
+  className,
+  style,
+  ...props
+}: TextureSelectorButtonProps) => {
+  return (
+    <button
+      className={cn(
+        textureSelectorButtonVariants({ variant, selected }),
+        className,
+      )}
+      style={{
+        ...style,
+        ...(preview && { backgroundImage: `url(${preview})` }),
+      }}
+      aria-label={label}
+      aria-pressed={selected}
+      {...props}
+    />
+  )
+}
+
 export default function TextureSelector({
   selectedMaterial,
   onSelectMaterial,
@@ -28,34 +84,23 @@ export default function TextureSelector({
 }) {
   return (
     <div className="absolute flex flex-col gap-2 top-3 left-3 z-10">
-      <button
-        className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-white ${
-          selectedMaterial === undefined
-            ? 'border-white ring-2 ring-white/60'
-            : 'border-white/20 hover:border-white/40'
-        }`}
-        aria-label="Remove texture"
-        aria-pressed={selectedMaterial === undefined}
+      <TextureSelectorButton
+        variant="none"
+        selected={selectedMaterial === undefined}
+        label="Remove texture"
         onClick={() => onSelectMaterial(undefined)}
       >
-        <div className="w-full h-full flex items-center justify-center text-black/50 text-sm font-medium">
+        <div className="w-full h-full flex items-center justify-center">
           None
         </div>
-      </button>
+      </TextureSelectorButton>
 
       {MATERIALS.map((material) => (
-        <button
+        <TextureSelectorButton
           key={material.id}
-          className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-cover bg-center ${
-            selectedMaterial === material.id
-              ? 'border-white ring-2 ring-white/60'
-              : 'border-white/20 hover:border-white/40'
-          }`}
-          style={{
-            backgroundImage: `url(${material.preview})`,
-          }}
-          aria-label={`Select ${material.name} texture`}
-          aria-pressed={selectedMaterial === material.id}
+          selected={selectedMaterial === material.id}
+          preview={material.preview}
+          label={`Select ${material.name} texture`}
           onClick={() => onSelectMaterial(material.id)}
         />
       ))}

@@ -11,7 +11,7 @@ export default function PointLight() {
     'Point Light 1',
     {
       intensity: {
-        value: 2,
+        value: 1.5,
         min: 0,
         max: 4,
         step: 0.05,
@@ -48,7 +48,7 @@ export default function PointLight() {
     'Point Light 2',
     {
       intensity: {
-        value: 2,
+        value: 1.5,
         min: 0,
         max: 4,
         step: 0.05,
