@@ -48,13 +48,29 @@ export default function TShirtModel(
   const groupRef = useRef<THREE.Group>(null)
   const prevMaterialRef = useRef<THREE.MeshPhysicalMaterial | null>(null)
 
-  // Add spinning animation
-  const { rotationY } = useSpring({
-    rotationY: isChangingMaterial ? 7 : 0,
+  // Fade the model out when the material is changing
+  // This is so it doesn't look jarring when the material changes
+  const { opacity } = useSpring({
+    opacity: isChangingMaterial ? 0 : 1,
     config: {
-      mass: 2,
-      tension: 45,
-      friction: 15,
+      mass: 0.1,
+      tension: 100,
+      friction: 50,
+    },
+  })
+
+  // Keep the model spinning when the material is changing
+  const { rotationY } = useSpring({
+    from: { rotationY: 0 },
+    to: async (next) => {
+      while (isChangingMaterial) {
+        await next({ rotationY: rotationY.get() + Math.PI * 2 })
+      }
+    },
+    config: {
+      mass: 1,
+      tension: 80,
+      friction: 10,
     },
   })
 
@@ -92,6 +108,7 @@ export default function TShirtModel(
   const material = useMemo(() => {
     const materialProps: THREE.MeshPhysicalMaterialParameters = {
       transparent: true,
+      opacity: 1,
       reflectivity: 0,
       metalness: 0,
       roughness: 1,
@@ -147,6 +164,7 @@ export default function TShirtModel(
   useLayoutEffect(() => {
     return () => {
       material.dispose()
+
       if (prevMaterialRef.current) {
         prevMaterialRef.current.dispose()
       }
@@ -158,7 +176,7 @@ export default function TShirtModel(
       {...restProps}
       dispose={null}
       ref={groupRef}
-      rotation-y={rotationY.to((r) => r % (Math.PI * 2))}
+      rotation-y={rotationY}
     >
       <Mesh
         name="__var_neckline__neck_v__*back_pannel"
@@ -167,6 +185,7 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
         azimuth={Math.PI}
         material={material}
+        material-opacity={opacity}
       />
       <Mesh
         name="__var_neckline_neck_v__*front_panel"
@@ -175,6 +194,7 @@ export default function TShirtModel(
         zoomToFit={zoomToFit}
         azimuth={0}
         material={material}
+        material-opacity={opacity}
       />
       <Mesh
         name="__var_neckline_neck_v__*neck_rim"
@@ -182,6 +202,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
         material={material}
+        material-opacity={opacity}
       />
       <Mesh
         name="shirt_interior"
@@ -189,6 +210,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
         material={material}
+        material-opacity={opacity}
       />
       <Mesh
         name="left_sleeve"
@@ -196,6 +218,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
         material={material}
+        material-opacity={opacity}
       />
       <Mesh
         name="right_sleeve"
@@ -203,6 +226,7 @@ export default function TShirtModel(
         position={[0, -1.152, 0.065]}
         zoomToFit={zoomToFit}
         material={material}
+        material-opacity={opacity}
       />
     </animated.group>
   )
@@ -216,24 +240,22 @@ type MeshProps = JSX.IntrinsicElements['mesh'] & {
   azimuth?: number
 }
 
-function Mesh(props: MeshProps) {
+const Mesh = animated(({ zoomToFit, azimuth, ...props }: MeshProps) => {
   const ref = useRef<THREE.Mesh>(null)
-  const { zoomToFit, ...restProps } = props
 
   return (
     <mesh
-      {...restProps}
+      {...props}
       ref={ref}
       onClick={(e) => {
         e.stopPropagation()
-        zoomToFit(ref, props.azimuth)
+        zoomToFit(ref, azimuth)
       }}
       castShadow
       receiveShadow
-      key={props.name}
     />
   )
-}
+})
 
 // Preload the model
 useGLTF.preload('/models/t-shirt.glb')
