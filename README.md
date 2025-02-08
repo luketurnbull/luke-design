@@ -47,6 +47,7 @@ Priorities:
 - [x] Better changing states with react spring?
 - [ ] Add delete button functionality to delete a model
 - [ ] Collapse the sidebar by default
+- [ ] Add go back button when zoomed in on the model
 - [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
 - [ ] Documentation
 

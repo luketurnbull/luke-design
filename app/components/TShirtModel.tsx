@@ -2,7 +2,7 @@ import { GLTF } from 'three-stdlib'
 import * as THREE from 'three'
 import { useGLTF, CameraControls } from '@react-three/drei'
 import { useTextures } from '~/hooks/use-textures'
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { useLayoutEffect } from '@tanstack/react-router'
 import { MaterialType } from '~/hooks/use-textures'
 import { useSpring, animated } from '@react-spring/three'
@@ -79,7 +79,7 @@ export default function TShirtModel(
   const { zoomToMesh } = useCamera({ cameraControlsRef: cameraControls })
 
   // Zoom to fit the model to the center of the screen when the component mounts
-  useLayoutEffect(() => {
+  useEffect(() => {
     zoomToMesh(groupRef)
   }, [cameraControls, groupRef.current])
 

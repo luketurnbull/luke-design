@@ -1,6 +1,7 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import * as THREE from 'three'
 import { animated } from '@react-spring/three'
+import { useCursor } from '@react-three/drei'
 
 type MeshProps = JSX.IntrinsicElements['mesh'] & {
   zoomToFit: (
@@ -17,6 +18,8 @@ type MeshProps = JSX.IntrinsicElements['mesh'] & {
 const ClickableMesh = animated(
   ({ zoomToFit, azimuth, ...props }: MeshProps) => {
     const ref = useRef<THREE.Mesh>(null)
+    const [hovered, setHovered] = useState(false)
+    useCursor(hovered)
 
     return (
       <mesh
@@ -25,6 +28,14 @@ const ClickableMesh = animated(
         onClick={(e) => {
           e.stopPropagation()
           zoomToFit(ref, azimuth)
+        }}
+        onPointerEnter={(e) => {
+          e.stopPropagation()
+          setHovered(true)
+        }}
+        onPointerLeave={(e) => {
+          e.stopPropagation()
+          setHovered(false)
         }}
         castShadow
         receiveShadow
