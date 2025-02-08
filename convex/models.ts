@@ -64,3 +64,26 @@ export const updateMaterial = mutation({
     return await ctx.db.patch(modelId, { material })
   },
 })
+
+export const deleteModel = mutation({
+  args: {
+    modelId: v.id('models'),
+  },
+  handler: async (ctx, { modelId }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('User not authenticated')
+    }
+
+    const model = await ctx.db.get(modelId)
+    if (!model) {
+      throw new Error('Model not found')
+    }
+
+    if (model.userId !== identity.subject) {
+      throw new Error('Not authorized')
+    }
+
+    await ctx.db.delete(modelId)
+  },
+})
