@@ -19,7 +19,7 @@ export default function Scene({ selectedMaterial }: SceneProps) {
     'Ambient Light',
     {
       intensity: {
-        value: 0.2,
+        value: 0.6,
         min: 0,
         max: 1,
         step: 0.05,

@@ -1,5 +1,6 @@
 import { useTexture } from '@react-three/drei'
 import { Texture, Color } from 'three'
+import { useControls, folder } from 'leva'
 
 export type MaterialType = 'denim' | 'red-plaid' | 'houndstooth-fabric-weave'
 
@@ -75,10 +76,159 @@ export function useTextures() {
     houndstoothAo,
   ] = useTexture(TEXTURE_PATHS['houndstooth-fabric-weave'])
 
-  // I decided to use a map to access the textures by the material type instead of an array
-  // This way it's easier and quicker to select the textures by the material type
-  // If this were a real project, I would probably use a database to store the textures and have an admin panel to add new textures
-  // This would result in the textures being an array of objects with the texture data, making it easier to add new textures in the future
+  // Add Leva controls for each material's properties
+  const denimControls = useControls(
+    'Material Properties',
+    {
+      Denim: folder(
+        {
+          roughness: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+          metalness: {
+            value: 0,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+          sheen: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+        },
+        { collapsed: true },
+      ),
+    },
+    { collapsed: true },
+  )
+
+  const redPlaidControls = useControls(
+    'Material Properties',
+    {
+      'Red Plaid': folder(
+        {
+          Displacement: folder(
+            {
+              scale: {
+                value: 0.01,
+                min: 0,
+                max: 0.5,
+                step: 0.0001,
+                format: (v: number) => v.toFixed(4),
+              },
+              bias: {
+                value: 0,
+                min: -0.5,
+                max: 0,
+                step: 0.0001,
+                format: (v: number) => v.toFixed(4),
+              },
+            },
+            { collapsed: true },
+          ),
+          normalScale: {
+            value: 2,
+            min: 0,
+            max: 2,
+            step: 0.01,
+          },
+          bumpScale: {
+            value: 0.5,
+            min: 0,
+            max: 2,
+            step: 0.01,
+          },
+          roughness: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+          metalness: {
+            value: 0,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+          sheen: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+        },
+        { collapsed: true },
+      ),
+    },
+    { collapsed: true },
+  )
+
+  const houndstoothControls = useControls(
+    'Material Properties',
+    {
+      Houndstooth: folder(
+        {
+          Displacement: folder(
+            {
+              scale: {
+                value: 0.003,
+                min: -0.1,
+                max: 0.1,
+                step: 0.0001,
+                format: (v: number) => v.toFixed(4),
+              },
+              bias: {
+                value: -0.002,
+                min: -0.1,
+                max: 0.1,
+                step: 0.0001,
+                format: (v: number) => v.toFixed(4),
+              },
+            },
+            { collapsed: true },
+          ),
+          normalScale: {
+            value: 2,
+            min: 0,
+            max: 2,
+            step: 0.01,
+          },
+          bumpScale: {
+            value: 0.5,
+            min: 0,
+            max: 2,
+            step: 0.01,
+          },
+          roughness: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+          metalness: {
+            value: 0,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+          sheen: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.01,
+          },
+        },
+        { collapsed: true },
+      ),
+    },
+    { collapsed: true },
+  )
+
   const textures: MaterialTextures = {
     denim: {
       albedo: denimAlbedo,
@@ -104,10 +254,7 @@ export function useTextures() {
     },
   }
 
-  // Created a map to access the texture details by the material type
-  // Needed to make the displacement scale and bias different for each material
-  // This is because the roughness and height maps are different for each material
-  // And the displacement scale and bias need to be different to get a good look
+  // Use the Leva controls to dynamically update the texture details
   const textureDetails: Record<
     MaterialType,
     {
@@ -118,34 +265,38 @@ export function useTextures() {
       metalness: number
       sheen: number
       sheenColor: Color
+      normalScale: number
     }
   > = {
     denim: {
-      bumpScale: 1000,
+      bumpScale: 0,
       displacementScale: 0,
       displacementBias: 0,
-      roughness: 1,
-      metalness: 0,
-      sheen: 1,
+      roughness: denimControls.roughness,
+      metalness: denimControls.metalness,
+      sheen: denimControls.sheen,
       sheenColor: new Color(1, 1, 1),
+      normalScale: 1,
     },
     'red-plaid': {
-      bumpScale: 1000,
-      displacementScale: 0.005,
-      displacementBias: -0.0025,
-      roughness: 1,
-      metalness: 0,
-      sheen: 1,
+      bumpScale: redPlaidControls.bumpScale,
+      displacementScale: redPlaidControls.scale,
+      displacementBias: redPlaidControls.bias,
+      roughness: redPlaidControls.roughness,
+      metalness: redPlaidControls.metalness,
+      sheen: redPlaidControls.sheen,
       sheenColor: new Color(1, 1, 1),
+      normalScale: redPlaidControls.normalScale,
     },
     'houndstooth-fabric-weave': {
-      bumpScale: 1000,
-      displacementScale: 0.003,
-      displacementBias: -0.002,
-      roughness: 1,
-      metalness: 0,
-      sheen: 1,
+      bumpScale: houndstoothControls.bumpScale,
+      displacementScale: houndstoothControls.scale,
+      displacementBias: houndstoothControls.bias,
+      roughness: houndstoothControls.roughness,
+      metalness: houndstoothControls.metalness,
+      sheen: houndstoothControls.sheen,
       sheenColor: new Color(1, 1, 1),
+      normalScale: houndstoothControls.normalScale,
     },
   }
 

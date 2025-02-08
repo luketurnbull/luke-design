@@ -18,7 +18,7 @@ export default function PostProcessing() {
         label: 'Brightness',
       },
       contrast: {
-        value: 0.17,
+        value: 0.48,
         min: -1,
         max: 1,
         step: 0.01,

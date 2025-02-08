@@ -80,7 +80,9 @@ export default function TShirtModel(
       return new THREE.MeshPhysicalMaterial({
         map: selectedTextures.albedo,
         normalMap: selectedTextures.normal,
+        normalScale: new THREE.Vector2(2, 2),
         roughnessMap: selectedTextures.roughness,
+        sheenRoughnessMap: selectedTextures.roughness,
         aoMap: selectedTextures.ao,
         metalnessMap: selectedTextures.metallic,
         metalness: textureDetails[selectedMaterial].metalness,
@@ -89,9 +91,11 @@ export default function TShirtModel(
         sheenColor: textureDetails[selectedMaterial].sheenColor,
         bumpMap: selectedTextures.height,
         bumpScale: textureDetails[selectedMaterial].bumpScale,
-        displacementMap: selectedTextures.height,
-        displacementScale: textureDetails[selectedMaterial].displacementScale,
-        displacementBias: textureDetails[selectedMaterial].displacementBias,
+        // displacementMap: selectedTextures.height,
+        // displacementScale: textureDetails[selectedMaterial].displacementScale,
+        // displacementBias: textureDetails[selectedMaterial].displacementBias,
+        thicknessMap: selectedTextures.height,
+        thickness: 1000,
       })
     }
 
