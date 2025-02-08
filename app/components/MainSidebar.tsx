@@ -49,10 +49,10 @@ export default function MainSidebar() {
             </SidebarGroupAction>
           </CreateTShirtModal>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-3 mt-3">
               {models?.map((model, index) => (
                 <SidebarMenuItem key={model._id}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton className="p-4" asChild>
                     <Link
                       to="/models/$modelId"
                       params={{
