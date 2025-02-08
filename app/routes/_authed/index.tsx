@@ -7,7 +7,7 @@ import CreateTShirtModal from '~/components/CreateTShirtModal'
  * This route is used to display the dashboard page.
  * It is wrapped in the _authed route so only authenticated users can access it.
  */
-export const Route = createFileRoute('/_authed/dashboard')({
+export const Route = createFileRoute('/_authed/')({
   component: RouteComponent,
 })
 

@@ -16,7 +16,7 @@ export const Route = createFileRoute('/_authed')({
   beforeLoad: ({ context }) => {
     if (!context.userId) {
       throw redirect({
-        to: '/',
+        to: '/sign-in',
       })
     }
   },

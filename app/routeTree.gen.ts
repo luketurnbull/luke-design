@@ -11,27 +11,27 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SignInImport } from './routes/sign-in'
 import { Route as AuthedImport } from './routes/_authed'
-import { Route as IndexImport } from './routes/index'
-import { Route as AuthedDashboardImport } from './routes/_authed/dashboard'
+import { Route as AuthedIndexImport } from './routes/_authed/index'
 import { Route as AuthedModelsModelIdImport } from './routes/_authed/models.$modelId'
 
 // Create/Update Routes
+
+const SignInRoute = SignInImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthedRoute = AuthedImport.update({
   id: '/_authed',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const AuthedIndexRoute = AuthedIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AuthedDashboardRoute = AuthedDashboardImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -45,13 +45,6 @@ const AuthedModelsModelIdRoute = AuthedModelsModelIdImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
     '/_authed': {
       id: '/_authed'
       path: ''
@@ -59,11 +52,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedImport
       parentRoute: typeof rootRoute
     }
-    '/_authed/dashboard': {
-      id: '/_authed/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthedDashboardImport
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authed/': {
+      id: '/_authed/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthedIndexImport
       parentRoute: typeof AuthedImport
     }
     '/_authed/models/$modelId': {
@@ -79,12 +79,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthedRouteChildren {
-  AuthedDashboardRoute: typeof AuthedDashboardRoute
+  AuthedIndexRoute: typeof AuthedIndexRoute
   AuthedModelsModelIdRoute: typeof AuthedModelsModelIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedDashboardRoute: AuthedDashboardRoute,
+  AuthedIndexRoute: AuthedIndexRoute,
   AuthedModelsModelIdRoute: AuthedModelsModelIdRoute,
 }
 
@@ -92,49 +92,48 @@ const AuthedRouteWithChildren =
   AuthedRoute._addFileChildren(AuthedRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '': typeof AuthedRouteWithChildren
-  '/dashboard': typeof AuthedDashboardRoute
+  '/sign-in': typeof SignInRoute
+  '/': typeof AuthedIndexRoute
   '/models/$modelId': typeof AuthedModelsModelIdRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof AuthedRouteWithChildren
-  '/dashboard': typeof AuthedDashboardRoute
+  '/sign-in': typeof SignInRoute
+  '/': typeof AuthedIndexRoute
   '/models/$modelId': typeof AuthedModelsModelIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
-  '/_authed/dashboard': typeof AuthedDashboardRoute
+  '/sign-in': typeof SignInRoute
+  '/_authed/': typeof AuthedIndexRoute
   '/_authed/models/$modelId': typeof AuthedModelsModelIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/dashboard' | '/models/$modelId'
+  fullPaths: '' | '/sign-in' | '/' | '/models/$modelId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/dashboard' | '/models/$modelId'
+  to: '/sign-in' | '/' | '/models/$modelId'
   id:
     | '__root__'
-    | '/'
     | '/_authed'
-    | '/_authed/dashboard'
+    | '/sign-in'
+    | '/_authed/'
     | '/_authed/models/$modelId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
+  SignInRoute: typeof SignInRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
+  SignInRoute: SignInRoute,
 }
 
 export const routeTree = rootRoute
@@ -147,22 +146,22 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/_authed"
+        "/_authed",
+        "/sign-in"
       ]
-    },
-    "/": {
-      "filePath": "index.tsx"
     },
     "/_authed": {
       "filePath": "_authed.tsx",
       "children": [
-        "/_authed/dashboard",
+        "/_authed/",
         "/_authed/models/$modelId"
       ]
     },
-    "/_authed/dashboard": {
-      "filePath": "_authed/dashboard.tsx",
+    "/sign-in": {
+      "filePath": "sign-in.tsx"
+    },
+    "/_authed/": {
+      "filePath": "_authed/index.tsx",
       "parent": "/_authed"
     },
     "/_authed/models/$modelId": {
