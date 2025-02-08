@@ -6,6 +6,8 @@ import { useRef, useMemo } from 'react'
 import { useLayoutEffect } from '@tanstack/react-router'
 import { MaterialType } from '~/hooks/use-textures'
 import { useSpring, animated } from '@react-spring/three'
+import ClickableMesh from './ClickableMesh'
+import useCamera from '~/hooks/use-camera'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -30,7 +32,7 @@ type GLTFResult = GLTF & {
 // in a modular type friendly way
 export default function TShirtModel(
   props: JSX.IntrinsicElements['group'] & {
-    cameraControls: CameraControls | null
+    cameraControls: React.RefObject<CameraControls>
     selectedMaterial: MaterialType | undefined
     isChangingMaterial: boolean
   },
@@ -74,32 +76,12 @@ export default function TShirtModel(
     },
   })
 
+  const { zoomToMesh } = useCamera({ cameraControlsRef: cameraControls })
+
   // Zoom to fit the model to the center of the screen when the component mounts
   useLayoutEffect(() => {
-    zoomToFit(groupRef)
+    zoomToMesh(groupRef)
   }, [cameraControls, groupRef.current])
-
-  // Zoom to fit the passed in ref to the center of the screen
-  // If an azimuth is passed in, rotate the camera to that azimuth
-  // Always level out elevation
-  const zoomToFit = (
-    ref: React.RefObject<THREE.Group | THREE.Mesh>,
-    azimuth?: number,
-  ) => {
-    if (!cameraControls || !ref.current) return
-
-    const box = new THREE.Box3().setFromObject(ref.current)
-    cameraControls.fitToBox(box, true, {
-      paddingBottom: 0.1,
-      paddingTop: 0.1,
-      paddingLeft: 0.1,
-      paddingRight: 0.1,
-    })
-    cameraControls.rotatePolarTo(Math.PI / 2, true)
-    if (azimuth) {
-      cameraControls.rotateAzimuthTo(azimuth, true)
-    }
-  }
 
   // Using meshPhysicalMaterial for the t-shirt
   // This is because it's the most realistic material for fabric
@@ -171,6 +153,9 @@ export default function TShirtModel(
     }
   }, [material])
 
+  // Display all parts of the t-shirt as r3f meshes,
+  // I find it much easier to manage and modify the model this way
+  // It's easy to read and understand and also modularises the code
   return (
     <animated.group
       {...restProps}
@@ -178,84 +163,59 @@ export default function TShirtModel(
       ref={groupRef}
       rotation-y={rotationY}
     >
-      <Mesh
+      <ClickableMesh
         name="__var_neckline__neck_v__*back_pannel"
         geometry={nodes['__var_neckline__neck_v__*back_pannel'].geometry}
         position={[0, -1.152, 0.065]}
-        zoomToFit={zoomToFit}
+        zoomToFit={zoomToMesh}
         azimuth={Math.PI}
         material={material}
         material-opacity={opacity}
       />
-      <Mesh
+      <ClickableMesh
         name="__var_neckline_neck_v__*front_panel"
         geometry={nodes['__var_neckline_neck_v__*front_panel'].geometry}
         position={[0, -1.152, 0.065]}
-        zoomToFit={zoomToFit}
+        zoomToFit={zoomToMesh}
         azimuth={0}
         material={material}
         material-opacity={opacity}
       />
-      <Mesh
+      <ClickableMesh
         name="__var_neckline_neck_v__*neck_rim"
         geometry={nodes['__var_neckline_neck_v__*neck_rim'].geometry}
         position={[0, -1.152, 0.065]}
-        zoomToFit={zoomToFit}
+        zoomToFit={zoomToMesh}
         material={material}
         material-opacity={opacity}
       />
-      <Mesh
+      <ClickableMesh
         name="shirt_interior"
         geometry={nodes.shirt_interior.geometry}
         position={[0, -1.152, 0.065]}
-        zoomToFit={zoomToFit}
+        zoomToFit={zoomToMesh}
         material={material}
         material-opacity={opacity}
       />
-      <Mesh
+      <ClickableMesh
         name="left_sleeve"
         geometry={nodes.left_sleeve.geometry}
         position={[0, -1.152, 0.065]}
-        zoomToFit={zoomToFit}
+        zoomToFit={zoomToMesh}
         material={material}
         material-opacity={opacity}
       />
-      <Mesh
+      <ClickableMesh
         name="right_sleeve"
         geometry={nodes.right_sleeve.geometry}
         position={[0, -1.152, 0.065]}
-        zoomToFit={zoomToFit}
+        zoomToFit={zoomToMesh}
         material={material}
         material-opacity={opacity}
       />
     </animated.group>
   )
 }
-
-type MeshProps = JSX.IntrinsicElements['mesh'] & {
-  zoomToFit: (
-    ref: React.RefObject<THREE.Mesh | THREE.Group>,
-    azimuth?: number,
-  ) => void
-  azimuth?: number
-}
-
-const Mesh = animated(({ zoomToFit, azimuth, ...props }: MeshProps) => {
-  const ref = useRef<THREE.Mesh>(null)
-
-  return (
-    <mesh
-      {...props}
-      ref={ref}
-      onClick={(e) => {
-        e.stopPropagation()
-        zoomToFit(ref, azimuth)
-      }}
-      castShadow
-      receiveShadow
-    />
-  )
-})
 
 // Preload the model
 useGLTF.preload('/models/t-shirt.glb')

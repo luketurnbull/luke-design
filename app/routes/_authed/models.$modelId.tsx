@@ -3,15 +3,16 @@ import { api } from 'convex/_generated/api'
 import { useConvexQuery, useConvexMutation } from '@convex-dev/react-query'
 import { Id } from 'convex/_generated/dataModel'
 import { Canvas } from '@react-three/fiber'
-import { BakeShadows, Preload } from '@react-three/drei'
+import { BakeShadows, CameraControls, Preload } from '@react-three/drei'
 import { Loader2 } from 'lucide-react'
 import * as THREE from 'three'
-import { Suspense, useCallback, useState } from 'react'
+import { Suspense, useCallback, useState, useRef } from 'react'
 import { Leva, useControls } from 'leva'
 import Scene from '~/components/Scene'
 import { MaterialType } from '~/hooks/use-textures'
 import TextureSelector from '~/components/TextureSelector'
 import PostProcessing from '~/components/PostProcessing'
+import TShirtModel from '~/components/TShirtModel'
 
 /**
  * This route is used to display a specific t-shirt model.
@@ -34,6 +35,7 @@ function RouteComponent() {
   const model = useConvexQuery(api.models.getById, { modelId })
   const updateMaterial = useConvexMutation(api.models.updateMaterial)
   const [isChangingMaterial, setIsChangingMaterial] = useState(false)
+  const cameraControlsRef = useRef<CameraControls>(null)
 
   const handleMaterialChange = useCallback(
     async (material: MaterialType | undefined) => {
@@ -132,17 +134,44 @@ function RouteComponent() {
           powerPreference: 'high-performance',
         }}
       >
-        {/*
-          Added a scene component to the canvas so we can control the camera and light
-          This is a great way to start off a scene and add more complexity later
-        */}
         <Suspense fallback={null}>
-          <Scene
+          {/*
+            Added a scene component to put Scene specific components in
+            Just using this for the lights at the moment
+          */}
+          <Scene />
+
+          {/*
+            Added the TShirtModel component to the scene
+            This is where the model is rendered
+            I have passed the camera controls to the component so we can pan around the model
+          */}
+          <TShirtModel
+            cameraControls={cameraControlsRef}
             selectedMaterial={currentMaterial}
             isChangingMaterial={isChangingMaterial}
           />
+
+          {/*
+            Preload all the assets in the scene
+            This is so the model is rendered faster
+          */}
           <Preload all />
         </Suspense>
+
+        {/*
+          Added a camera controls component to the scene so
+          I can pan around the model with ease
+          Added a smooth time for smoother camera movements
+          Disabled zoom functionality
+        */}
+        <CameraControls
+          ref={cameraControlsRef}
+          makeDefault
+          smoothTime={0.2}
+          // Disable zoom functionality
+          dollySpeed={0}
+        />
 
         {/*
           Moved the post-processing into a separate component to keep the scene clean

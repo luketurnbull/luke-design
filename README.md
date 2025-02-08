@@ -42,8 +42,9 @@ Priorities:
 - [x] Directional and spot light, add to Tweakpane or Leva UI to test
 - [x] Display textures in a panel
 - [x] Allow user to add different textures to the model
-- [ ] Add Leva controls to materials to play with settings
-- [ ] Work on better lighting
+- [x] Add Leva controls to materials to play with settings
+- [x] Work on better lighting
+- [x] Better changing states with react spring?
 - [ ] Add delete button functionality to delete a model
 - [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
 - [ ] Documentation
@@ -52,6 +53,4 @@ Priorities:
 
 - [ ] Allow user to add materials to different parts of the model
 - [ ] Allow user to change colour of the model
-- [ ] Make user settings, let the tinker with the scene and lighting?
-- [ ] Better changing states with react spring?
-- [ ] Smooth transitions, could blend between textures when changing, although this may be too much getting into custom shaders?
+- [ ] Make user settings, let them tinker with the scene and lighting?
