@@ -19,6 +19,17 @@ CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, and CLERK_JWT_ISSUER_DOMAIN all in the 
 
 Then run `npx convex dev`.
 
+**WARNING: The Convex CLI creates a .env.local file but it is throwing errors, please rename it to .env.**
+
+# Run locally
+
+Make sure you have the correct Clerk on Convex endpoints set in the .env file. See the .env.example file for an example.
+
+```bash
+npm install
+npm run dev
+```
+
 # TODO
 
 Priorities:
