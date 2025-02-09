@@ -4,7 +4,11 @@
 - (Clerk)[https://clerk.com/docs/components/overview]
 - (Convex)[https://www.convex.dev/]
 - (Tailwind)[https://tailwindcss.com/]
-- (Shadcn/ui)[https://ui.shadcn.com/docs/components/button]
+- (Shadcn/ui)[https://ui.shadcn.com/docs/]
+- (React-three-fiber)[https://docs.pmnd.rs/react-three-fiber/]
+- (React-three-drei)[https://drei.docs.pmnd.rs/]
+- (React-three-postprocessing)[https://react-postprocessing.docs.pmnd.rs/]
+- (React-spring)[https://react-spring.dev/]
 
 Deployed to: https://luke-design.vercel.app/
 
@@ -47,10 +51,12 @@ Priorities:
 - [x] Better changing states with react spring?
 - [x] Add delete button functionality to delete a model
 - [x] Collapse the sidebar by default
-- [ ] Documentation
+- [x] Documentation
 
 ## Would be nice to have
 
+- [ ] Add Sonner notifications for when a model is deleted or when a model is created
+- [ ] Add user setting to see Leva controls
 - [ ] Add go back button when zoomed in on the model
 - [ ] Work on camera controls, to allow user to pan around the model without the camera going in the mesh
 - [ ] Hover over mesh to highlight?

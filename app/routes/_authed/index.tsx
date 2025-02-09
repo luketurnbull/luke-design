@@ -17,7 +17,7 @@ function RouteComponent() {
           Design your own t-shirts
         </h2>
         <p className="text-muted-foreground">
-          Get started by creating a new t-shirt design. click{' '}
+          Get started by creating a new t-shirt design. Click{' '}
           <CreateTShirtModal>
             <a className="text-blue-500 hover:underline cursor-pointer">here</a>
           </CreateTShirtModal>{' '}

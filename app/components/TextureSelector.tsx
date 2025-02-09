@@ -60,6 +60,7 @@ const TextureSelectorButton = ({
 }: TextureSelectorButtonProps) => {
   return (
     <button
+      {...props}
       className={cn(
         textureSelectorButtonVariants({ variant, selected }),
         className,
@@ -70,7 +71,7 @@ const TextureSelectorButton = ({
       }}
       aria-label={label}
       aria-pressed={selected}
-      {...props}
+      title={label}
     />
   )
 }

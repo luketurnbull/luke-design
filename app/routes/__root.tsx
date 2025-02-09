@@ -1,5 +1,4 @@
 import {
-  Link,
   Outlet,
   createRootRouteWithContext,
   useRouteContext,
@@ -35,6 +34,7 @@ export const Route = createRootRouteWithContext<{
   convexQueryClient: ConvexQueryClient
 }>()({
   head: () => ({
+    title: 'Luke Design - Create a custom T-Shirt!',
     meta: [
       {
         charSet: 'utf-8',

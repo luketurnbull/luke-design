@@ -1,6 +1,5 @@
 import { useTexture } from '@react-three/drei'
-import { Texture, Color } from 'three'
-import { useControls, folder } from 'leva'
+import { Texture } from 'three'
 
 export type MaterialType = 'denim' | 'red-plaid' | 'houndstooth-fabric-weave'
 

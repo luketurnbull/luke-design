@@ -123,6 +123,7 @@ function RouteComponent() {
       />
 
       <Canvas
+        // Cap the dpr at 2x for performance, anything higher is unnecessary
         dpr={[1, 2]}
         shadows={rendererSettings.shadows}
         gl={{
@@ -134,18 +135,18 @@ function RouteComponent() {
           powerPreference: 'high-performance',
         }}
       >
-        <Suspense fallback={null}>
-          {/*
+        {/*
             Added a scene component to put Scene specific components in
             Just using this for the lights at the moment
           */}
-          <Scene />
+        <Scene />
 
-          {/*
+        {/*
             Added the TShirtModel component to the scene
             This is where the model is rendered
             I have passed the camera controls to the component so we can pan around the model
           */}
+        <Suspense fallback={null}>
           <TShirtModel
             cameraControls={cameraControlsRef}
             selectedMaterial={currentMaterial}
